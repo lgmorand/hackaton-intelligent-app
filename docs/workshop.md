@@ -2,7 +2,7 @@
 published: true
 type: workshop
 title: Build an Intelligent App
-short_title: Event-driven application using Azure iPaaS
+short_title: Build an Intelligent App
 description: In this workshop you will learn how to build an intelligent app leveraging Azure services
 level: intermediate # Required. Can be 'beginner', 'intermediate' or 'advanced'
 navigation_numbering: false
@@ -20,7 +20,7 @@ navigation_levels: 3
 
 # Introduction
 
-# Build and Modernize AI Applications Hackathon
+## Build and Modernize AI Applications Hackathon
 
 CosmicWorks has big plans for their retail site. They're eager to launch a POC of a simple chat interface where users can interact with a virtual agent to find product and account information.
 
@@ -44,7 +44,7 @@ This hackathon will challenge you and your team to launch a POC of a chat interf
 - .NET 7 SDK
 - Docker Desktop
 - Azure CLI 2.69.0
-- Helm v3.11.1 or greater - https://helm.sh/ (for AKS)
+- Helm v3.11.1 or greater - [https://helm.sh/](https://helm.sh/) (for AKS)
 - Subscription with access to the Azure OpenAI Service. Start here to [Request Access to Azure OpenAI Service](https://customervoice.microsoft.com/Pages/ResponsePage.aspx?id=v4j5cvGGr0GRqy180BHbR7en2Ais5pxKtso_Pz4b1_xUOFA5Qk1UWDRBMjg0WFhPMkIzTzhKQ1dWNyQlQCN0PWcu)
 
 ## Setting up your development environment
@@ -76,7 +76,7 @@ git checkout main
 >If `<resource-group-name>` already exists, your user must have `Owner` permissions on the resource group.
 >If `<resource-group-name>` does not exist exists, the deployment script will create it. In this case, your user must have `Owner` permissions on the subscription in which the resource group will be created.
 
->**NOTE**:
+> **NOTE**:
 >
 >By default, the deployment script will attempt to create new Azure Open AI model deployments for the `gpt-35-turbo` and `text-embedding-ada-002` models. If you already have deployments for these models, you can skip the deployment by passing the following parameters to the script:
 
@@ -104,7 +104,6 @@ For the purpose of this hackathon, you can whatever your preference is, either A
 
 ### Verify initial deployment
 
-
 1. After the command completes, navigate to resource group and obtain the name of the AKS service.
 2. Execute the following command to obtain the website's endpoint:
 
@@ -124,7 +123,6 @@ For the purpose of this hackathon, you can whatever your preference is, either A
 
 If the website loads, you are ready to continue with the hackathon challenges. Don't worry if the website is not fully operational yet - you will get it there!
 
-
 ## Service Architecture
 
 After the deployment is complete the following Azure services will be deployed.
@@ -132,14 +130,13 @@ After the deployment is complete the following Azure services will be deployed.
 - Azure OpenAI Service
 - Azure Cosmos DB
 - Azure Cognitive Search
-- Azure Container Apps (or AKS) 
+- Azure Container Apps (or AKS)
 - Azure Storage
 - Azure Networking (*not pictured*)
 
 <p align="center">
     <img src="img/architecture.png" width="100%">
 </p>
-
 
 ## Run the solution locally using Visual Studio
 
@@ -153,102 +150,102 @@ You can run the website and the REST API that supports it locally. You need to f
 >
 > If you deploy using a pre-existing Azure OpenAI account. You will need to update `CompletionsDeployment` and `EmbeddingsDeployment` values to match the names used for these models in your Azure OpenAI account.
 
-    ```json
-    {
-        "Logging": {
+```json
+{
+    "Logging": {
+        "LogLevel": {
+            "Default": "Information",
+            "Microsoft.AspNetCore": "Warning",
+            "Microsoft.SemanticKernel": "Error"
+        },
+        "ApplicationInsights": {
             "LogLevel": {
                 "Default": "Information",
                 "Microsoft.AspNetCore": "Warning",
                 "Microsoft.SemanticKernel": "Error"
-            },
-            "ApplicationInsights": {
-                "LogLevel": {
-                    "Default": "Information",
-                    "Microsoft.AspNetCore": "Warning",
-                    "Microsoft.SemanticKernel": "Error"
-                }
+            }
+        }
+    },
+    "AllowedHosts": "*",
+    "MSCosmosDBOpenAI": {
+        "CognitiveSearch": {
+            "IndexName": "vector-index",
+            "MaxVectorSearchResults": 10
+        },
+        "OpenAI": {
+            "CompletionsDeployment": "completions",
+            "CompletionsDeploymentMaxTokens": 8096,
+            "EmbeddingsDeployment": "embeddings",
+            "EmbeddingsDeploymentMaxTokens": 8191,
+            "ChatCompletionPromptName": "RetailAssistant.Default",
+            "ShortSummaryPromptName": "Summarizer.TwoWords",
+            "PromptOptimization": {
+                "CompletionsMinTokens": 50,
+                "CompletionsMaxTokens": 300,
+                "SystemMaxTokens": 1500,
+                "MemoryMinTokens": 1500,
+                "MemoryMaxTokens": 7000,
+                "MessagesMinTokens": 100,
+                "MessagesMaxTokens": 200
             }
         },
-        "AllowedHosts": "*",
-        "MSCosmosDBOpenAI": {
-            "CognitiveSearch": {
-                "IndexName": "vector-index",
-                "MaxVectorSearchResults": 10
-            },
-            "OpenAI": {
-                "CompletionsDeployment": "completions",
-                "CompletionsDeploymentMaxTokens": 8096,
-                "EmbeddingsDeployment": "embeddings",
-                "EmbeddingsDeploymentMaxTokens": 8191,
-                "ChatCompletionPromptName": "RetailAssistant.Default",
-                "ShortSummaryPromptName": "Summarizer.TwoWords",
-                "PromptOptimization": {
-                    "CompletionsMinTokens": 50,
-                    "CompletionsMaxTokens": 300,
-                    "SystemMaxTokens": 1500,
-                    "MemoryMinTokens": 1500,
-                    "MemoryMaxTokens": 7000,
-                    "MessagesMinTokens": 100,
-                    "MessagesMaxTokens": 200
-                }
-            },
-            "CosmosDB": {
-                "Containers": "completions, customer, product",
-                "MonitoredContainers": "customer, product",
-                "Database": "database",
-                "ChangeFeedLeaseContainer": "leases"
-            },
-            "DurableSystemPrompt": {
-                "BlobStorageContainer": "system-prompt"
-            },
-            "CognitiveSearchMemorySource": {
-                "IndexName": "vector-index",
-                "ConfigBlobStorageContainer": "memory-source",
-                "ConfigFilePath": "ACSMemorySourceConfig.json"
-            },
-            "BlobStorageMemorySource": {
-                "ConfigBlobStorageContainer": "memory-source",
-                "ConfigFilePath": "BlobMemorySourceConfig.json"
-            }
+        "CosmosDB": {
+            "Containers": "completions, customer, product",
+            "MonitoredContainers": "customer, product",
+            "Database": "database",
+            "ChangeFeedLeaseContainer": "leases"
+        },
+        "DurableSystemPrompt": {
+            "BlobStorageContainer": "system-prompt"
+        },
+        "CognitiveSearchMemorySource": {
+            "IndexName": "vector-index",
+            "ConfigBlobStorageContainer": "memory-source",
+            "ConfigFilePath": "ACSMemorySourceConfig.json"
+        },
+        "BlobStorageMemorySource": {
+            "ConfigBlobStorageContainer": "memory-source",
+            "ConfigFilePath": "BlobMemorySourceConfig.json"
         }
     }
-    ```
+}
+```
 
-- In the `ChatServiceWebApi` project, create an `appsettings.Development.json` file with the following content (replace all `<...>` placeholders with the values from your deployment):
+  - In the `ChatServiceWebApi` project, create an `appsettings.Development.json` file with the following content (replace all `<...>` placeholders with the values from your deployment):
 
-    ```json
-    {
-        "MSCosmosDBOpenAI": {
-            "CognitiveSearch": {
-                "Endpoint": "https://<...>.search.windows.net",
-                "Key": "<...>"
-            },
-            "OpenAI": {
-                "Endpoint": "https://<...>.openai.azure.com/",
-                "Key": "<...>"
-            },
-            "CosmosDB": {
-                "Endpoint": "https://<...>.documents.azure.com:443/",
-                "Key": "<...>"
-            },
-            "DurableSystemPrompt": {
-                "BlobStorageConnection": "<...>"
-            },
-            "BlobStorageMemorySource": {
-                "ConfigBlobStorageConnection": "<...>"
-            },
-            "CognitiveSearchMemorySource": {
-                "Endpoint": "https://<...>.search.windows.net",
-                "Key": "<...>",
-                "ConfigBlobStorageConnection": "<...>"
-            }
+```json
+{
+    "MSCosmosDBOpenAI": {
+        "CognitiveSearch": {
+            "Endpoint": "https://<...>.search.windows.net",
+            "Key": "<...>"
+        },
+        "OpenAI": {
+            "Endpoint": "https://<...>.openai.azure.com/",
+            "Key": "<...>"
+        },
+        "CosmosDB": {
+            "Endpoint": "https://<...>.documents.azure.com:443/",
+            "Key": "<...>"
+        },
+        "DurableSystemPrompt": {
+            "BlobStorageConnection": "<...>"
+        },
+        "BlobStorageMemorySource": {
+            "ConfigBlobStorageConnection": "<...>"
+        },
+        "CognitiveSearchMemorySource": {
+            "Endpoint": "https://<...>.search.windows.net",
+            "Key": "<...>",
+            "ConfigBlobStorageConnection": "<...>"
         }
     }
-    ```
+}
+```
 
-    >**NOTE**: THe `BlobStorageConnection` value can be found in the Azure Portal by navigating to the Storage Account created by the deployment (the one that has a container named `system-prompt`) and selecting the `Access keys` blade. The value is the `Connection string` for the `key1` key.
+> **NOTE**: THe `BlobStorageConnection` value can be found in the Azure Portal by navigating to the Storage Account created by the deployment (the one that has a container named `system-prompt`) and selecting the `Access keys` blade. The value is the `Connection string` for the `key1` key.
 
-### Running in debug 
+### Running in debug
 
 To run locally and debug using Visual Studio, open the solution file to load the projects and prepare for debugging.
 
@@ -260,9 +257,11 @@ You are now ready to start debugging the solution locally. To do this, press `F5
 
 **NOTE**: With Visual Studio, you can also use alternate ways to manage the secrets and configuration. For example, you can use the `Manage User Secrets` option from the context menu of the `ChatWebServiceApi` project to open the `secrets.json` file and add the configuration values there.
 
+---
+
 # Challenge 1: The Landing Before the Launch
 
-CosmicWorks has big plans for their retail site, but they need to start somewhere; they need a landing zone in Azure for all of their services. It will take a while to prepare their e-Commerce site to migrate to Azure, but they're eager to launch a POC of a simple chat interface where users can interact with a virtual agent to find product and account information. 
+CosmicWorks has big plans for their retail site, but they need to start somewhere; they need a landing zone in Azure for all of their services. It will take a while to prepare their e-Commerce site to migrate to Azure, but they're eager to launch a POC of a simple chat interface where users can interact with a virtual agent to find product and account information.
 
 They've created a simple Blazor web application for the UI elements and have asked you to to incorporate the backend plumbing to do the following:
 
@@ -281,14 +280,13 @@ For this challenge, you will deploy the services into the landing zone in prepar
 
 Your team must:
 
-1. Clone the Starter repo with the Blazor web application and starter artifacts 
+1. Clone the Starter repo with the Blazor web application and starter artifacts
 2. Set up your development environment
 3. Deploy the Azure services needed to support the chat interface
 
-
 ### Hints
 
-- CosmicWorks has provided you a script to deploy the foundation of your Azure environment. See the instructions in the README.md of the repo. 
+- CosmicWorks has provided you a script to deploy the foundation of your Azure environment. See the instructions in the README.md of the repo.
 - You will need to deploy the following Azure services within a new Resource Group:
   - Azure Cosmos DB
   - Azure OpenAI service
@@ -297,7 +295,8 @@ Your team must:
     - A web service that supports running the front-end Blazor web app in a Docker container
     - A web service that supports running the back-end web API in a Docker container
   - Azure Storage Account (not enabled for hierarchical namespace)
-- You will load data and deploy code into these services in a later challenge. 
+- You will load data and deploy code into these services in a later challenge.
+
 ### Success Criteria
 
 To complete this challenge successfully, you must:
@@ -306,9 +305,8 @@ To complete this challenge successfully, you must:
 - Deploy Azure OpenAI with the following deployments:
   - `completions` with the `gpt-35-turbo` model
   - `embeddings` with the `text-embedding-ada-002` model
-- Deploy Azure Cognitive Search in the basic tier. 
+- Deploy Azure Cognitive Search in the basic tier.
 - Deploy Azure Container Apps, Azure Container Registry and Azure Storage Account.
-
 
 ### Resources
 
@@ -320,6 +318,8 @@ To complete this challenge successfully, you must:
 ## Explore Further
 
 - [Understanding embeddings](https://learn.microsoft.com/azure/cognitive-services/openai/concepts/understand-embeddings)
+
+---
 
 # Challenge 2: It's All About the Payload
 
@@ -333,12 +333,10 @@ CosmicWorks has done some research, and they would like to use Microsoft Semanti
 
 Your team must:
 
-
 1. Implement an efficient and repeatable way to load product and customer data from the storage account into Cosmos DB. For this exercise, you only need to load the data once, but CosmicWorks wants to be able to repeat the process in the future with new data. Cosmicworks has provided the data for you to start with, listed in the resources below.
 2. Create a vector index in Azure Cognitive Search. They had some ideas on this that they provided in the starter project.
 3. Create a process to index product and customer data from Cosmos DB using the change feed to load the documents into an Azure Cognitive Search vector index. They have provided a starter template for you that they had created for another effort.
 4. Verify that the data was loaded into Cosmos DB and Cognitive Search.
-
 
 ### Hints
 
@@ -371,13 +369,15 @@ To complete this challenge successfully, you must:
 - [Understanding embeddings](https://learn.microsoft.com/azure/cognitive-services/openai/concepts/understand-embeddings)
 - [Semantic Kernel](https://learn.microsoft.com/semantic-kernel/overview/)
 
+---
+
 # Challenge 3: Now We're Flying
 
-With the critical components in place, we're ready to tie everything into the chat interface. When a user types a question into the chat interface, we need to create a vector embedding for the question, then search for the most similar vector embeddings for products and accounts, and return the relevant documents that get sent to Azure OpenAI's completions endpoint. 
+With the critical components in place, we're ready to tie everything into the chat interface. When a user types a question into the chat interface, we need to create a vector embedding for the question, then search for the most similar vector embeddings for products and accounts, and return the relevant documents that get sent to Azure OpenAI's completions endpoint.
 
 In order to return a human-friendly response to the user, we need to use the completions endpoint to generate a response based on the most relevant documents and an instructional system-level prompt. Furthermore, we need to keep a history of the user's questions and the responses that were generated so that they can reload the chat in the future.
 
-To generate prompts for the Azure OpenAI service, the approach is to use a technique called *prompt engineering* to author prompts that are used to guide the generation of completions. Prompt engineering is an iterative process that involves authoring prompts, generating completions, and evaluating the results. 
+To generate prompts for the Azure OpenAI service, the approach is to use a technique called *prompt engineering* to author prompts that are used to guide the generation of completions. Prompt engineering is an iterative process that involves authoring prompts, generating completions, and evaluating the results.
 
 The starter solution uses Semantic Kernel to orchestrate the execution of prompts. This challenge is about experimenting with system prompts to impact how the completions work.
 
@@ -385,13 +385,13 @@ The starter solution uses Semantic Kernel to orchestrate the execution of prompt
 
 Your team must:
 
-1. Use the Azure OpenAI service to create vector embeddings for the user prompt that is entered into the chat interface. Invoke the completions endpoint to generate a response based on the most relevant documents and some instructional system-level prompts. The system prompt should be included with every completions call, but not repeated in the chat history. Use Semantic Kernel as they stubbed out in the project to make this call. 
+1. Use the Azure OpenAI service to create vector embeddings for the user prompt that is entered into the chat interface. Invoke the completions endpoint to generate a response based on the most relevant documents and some instructional system-level prompts. The system prompt should be included with every completions call, but not repeated in the chat history. Use Semantic Kernel as they stubbed out in the project to make this call.
 2. Create the system prompt that defines the assistant's behavior. CosmicWorks has provided you with a starter prompt located under VectorSearchAiAssistant\SystemPrompts\RetailAssistant\Default.txt. You should add to the content in this file. The system prompt should instruct the model to do the following:
    1. Tell it that it is an intelligent assistant for a bike company.
    2. Tell it that it is responding to user questions about products, product categories, customers, and sales order information provided in JSON format embedded below.
    3. Only answer questions related to the information provided.
    4. Not to "make up" information and to respond that it does not know the answer to suggest to the user to search for it themselves.
-   5. Make sure the prompt ends with "Text of relevant information:" as after that the system will inject context data and chat history. 
+   5. Make sure the prompt ends with "Text of relevant information:" as after that the system will inject context data and chat history.
 3. Upload the system prompt file you created at the previous step to the Azure Storage Account, place it under the path `system-prompt / RetailAssistant` overwriting the file that is there.
 4. Store the user's questions and the responses that were generated so the system can reload them in the future.
 
@@ -400,7 +400,6 @@ Your team must:
 - CosmicWorks has provided starter code for you. Search for the two methods with `TODO: Challenge 3` and complete them as instructed.
 - Think carefully about the system prompt, about how it should respond, what knowledge it is allowed to use when reasoning to create a response, what subjects it is allowed to respond to and importantly what it should not respond to.
 - Have the agent reject off topic prompts from the user (such as asks to tell a joke).
-
 
 ### Success Criteria
 
@@ -419,6 +418,8 @@ To complete this challenge successfully, you must:
 
 - [Writing Effective System Prompts](https://learn.microsoft.com/azure/cognitive-services/openai/concepts/system-message)
 
+---
+
 # Challenge 4: What's Your Vector, Victor?
 
 Now it's time to see the end-to-end process in action. In this challenge, you will load new data using the data loading mechanism you created in a previous challenge, then observe the automatic vectorization in action. Once you ingest the new data, ask a question through the prompt interface and see if it returns an answer about the new data you loaded.
@@ -432,7 +433,7 @@ Your team must:
 
 ### Hints
 
-- Cosmicworks has provided the JSON files containing the initial products and customers that you loaded into the system, take one of these and modify it to create some new products or customers and uploaded it to the storage account from where you loaded the initial data and run your data loading process. 
+- Cosmicworks has provided the JSON files containing the initial products and customers that you loaded into the system, take one of these and modify it to create some new products or customers and uploaded it to the storage account from where you loaded the initial data and run your data loading process.
 - Experiment using prompts to elicit different response formats from the completions model:
    - Respond with a single number or with one or two words
    - Respond with a bulleted lists or formatted a certain way
@@ -445,7 +446,7 @@ Your team must:
 
 To complete this challenge successfully, you must:
 
-- Show your coach the new data that you created and then your chat history showing how it responded using the new data as context. 
+- Show your coach the new data that you created and then your chat history showing how it responded using the new data as context.
 - Try to locate the new product or customer data you loaded in the Cognitive Search Index and in Cosmos DB.
 
 ### Resources
@@ -456,6 +457,8 @@ To complete this challenge successfully, you must:
 ## Explore Further
 
 - [Prompt engineering techniques](https://learn.microsoft.com/azure/cognitive-services/openai/concepts/advanced-prompt-engineering?pivots=programming-language-chat-completions)
+
+---
 
 # Challenge 5: It's All About the Payload, The Sequel
 
@@ -477,14 +480,14 @@ Your team must:
 
 - With the starter solution supplied by CosmicWorks open in Visual Studio, expand the VectorSearchAiAssistant.Service project, Models, Search and take a look at Product.cs. This class is required to process the data with the Cosmos DB change feed and is also used as the schema for the document added to the Cognitive Search index. You will need to define an entity similar to this for your new type of data.
 - Extend the implementation of the `ModelRegistry` class to include your newly created data type.
-- Review the implementation of the change feed processor located in the same project under Services, CosmosDbService.cs to validate it is ready to use your new data type. 
-- In SemanticKernelRAGService.cs update the setup of the `_memoryTypes` in the SemanticKernelRAGService constructor to include your new type that will be used to initialize the Search index. 
+- Review the implementation of the change feed processor located in the same project under Services, CosmosDbService.cs to validate it is ready to use your new data type.
+- In SemanticKernelRAGService.cs update the setup of the `_memoryTypes` in the SemanticKernelRAGService constructor to include your new type that will be used to initialize the Search index.
 
 ### Success Criteria
 
 To complete this challenge successfully, you must:
 
-- Show your coach the new data that you created and then your chat history showing how it responded using the new data as context. 
+- Show your coach the new data that you created and then your chat history showing how it responded using the new data as context.
 - Try to locate the new product or customer data you loaded in the Cognitive Search Index and in Cosmos DB.
 
 ### Resources
@@ -494,6 +497,8 @@ To complete this challenge successfully, you must:
 ## Explore Further
 
 - [Reading from the change feed](https://learn.microsoft.com/en-us/azure/cosmos-db/nosql/read-change-feed)
+
+---
 
 # Challenge 6: The Colonel Needs a Promotion
 
@@ -516,7 +521,7 @@ Your team must:
 ### Hints
 
 - You might want to try building this first in a simple console project.
-- You should use the SequentialPlanner from Semantic Kernel to create and execute a plan around the prompt, so that it can choose when to invoke your plugins. 
+- You should use the SequentialPlanner from Semantic Kernel to create and execute a plan around the prompt, so that it can choose when to invoke your plugins.
 - You will have to update how you handle the completion response from the SequentialPlanner.
 
 ### Success Criteria
@@ -530,16 +535,17 @@ To complete this challenge successfully, you must:
 - [Semantic Kernel auto create plans with planner](https://learn.microsoft.com/semantic-kernel/ai-orchestration/planner?tabs=Csharp)
 - [Semantic Kernel creating native functions](https://learn.microsoft.com/en-us/semantic-kernel/ai-orchestration/native-functions?tabs=Csharp)
 
-
 ## Explore Further
 
 [Microsoft Semantic Kernel on Github](https://github.com/microsoft/semantic-kernel)
 
+---
+
 # Challenge 7: Getting Into the Flow
 
-Up until now, you have used a web service (ChatServiceWebAPI) that utilizes an instance of the ChatService singleton to  orchestrate calls to Azure OpenAI and Azure Cognitive Search by using Semantic Kernel. This effectively provides the "smarts" to your AI assistant. This is not the only way that you could build these smarts. 
+Up until now, you have used a web service (ChatServiceWebAPI) that utilizes an instance of the ChatService singleton to  orchestrate calls to Azure OpenAI and Azure Cognitive Search by using Semantic Kernel. This effectively provides the "smarts" to your AI assistant. This is not the only way that you could build these smarts.
 
-In this challenge, you and your team will use Azure ML Prompt Flow to replace portions of the ChatService singleton. 
+In this challenge, you and your team will use Azure ML Prompt Flow to replace portions of the ChatService singleton.
 
 ## Challenge
 
@@ -563,7 +569,6 @@ To complete this challenge successfully, you must:
 - Demonstrate to your coach the PromptFlow you created in Azure Machine Learning.
 - Deploy your Prompt Flow endpoint and integrate that into the solution.
 
-
 ### Resources
 
 - [Get stated with Prompt Flow](https://learn.microsoft.com/en-us/azure/machine-learning/prompt-flow/get-started-prompt-flow?view=azureml-api-2#create-and-develop-your-prompt-flow)
@@ -576,4 +581,4 @@ To complete this challenge successfully, you must:
 
 # Teardown
 
-When you have finished with the hackathon, simply delete the resource group that was created. 
+When you have finished with the hackathon, simply delete the resource group that was created.
