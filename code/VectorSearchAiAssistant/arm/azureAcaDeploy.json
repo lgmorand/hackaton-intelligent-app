@@ -11,10 +11,11 @@
   "parameters": {
     "location": {
       "type": "string",
-      "defaultValue": "eastus",
+      "defaultValue": "eastus2",
       "allowedValues": [
         "southcentralus",
         "eastus",
+        "eastus2",
         "westeurope"
       ],
       "metadata": {
@@ -370,7 +371,7 @@
       "type": "Microsoft.OperationalInsights/workspaces",
       "apiVersion": "2021-12-01-preview",
       "name": "[variables('laSettings').name]",
-      "location": "eastus",
+      "location": "eastus2",
       "properties": {
         "sku": {
           "name": "Standalone"

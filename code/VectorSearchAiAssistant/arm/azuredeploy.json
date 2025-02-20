@@ -11,10 +11,11 @@
   "parameters": {
     "location": {
       "type": "string",
-      "defaultValue": "eastus",
+      "defaultValue": "eastus2",
       "allowedValues": [
         "southcentralus",
         "eastus",
+        "eastus2",
         "westeurope"
       ],
       "metadata": {
@@ -86,7 +87,7 @@
       "name": "[format('{0}-aks', parameters('name'))]",
       "kubeletIdentityName": "[format('{0}-aks-agentpool', parameters('name'))]",
       "nodeRG": "[format('MC_{0}', parameters('name'))]",
-      "sku": "Basic",
+      "sku": "Base",
       "tier": "Free"
     },
     "laSettings": {
@@ -307,7 +308,7 @@
       "type": "Microsoft.OperationalInsights/workspaces",
       "apiVersion": "2021-12-01-preview",
       "name": "[variables('laSettings').name]",
-      "location": "eastus",
+      "location": "eastus2",
       "properties": {
         "sku": {
           "name": "Standalone"
@@ -345,15 +346,15 @@
     },
     {
       "type": "Microsoft.ContainerService/managedClusters",
-      "apiVersion": "2023-01-02-preview",
+      "apiVersion": "2023-07-02-preview",
       "name": "[variables('aksSettings').name]",
-      "location": "eastus",
+      "location": "eastus2",
       "dependsOn": [
         "[resourceId('Microsoft.Network/virtualNetworks/subnets', variables('vnetSettings').name, 'aks-subnet')]",
         "[resourceId('Microsoft.OperationalInsights/workspaces', variables('laSettings').name)]"
       ],
       "sku": {
-        "name": "Basic",
+        "name": "Base",
         "tier": "Free"
       },
       "identity": {
@@ -597,7 +598,7 @@
     },
     {      
       "type": "Microsoft.ContainerService/managedClusters/agentPools",
-      "apiVersion": "2023-01-02-preview",
+      "apiVersion": "2023-07-02-preview",
       "name": "[concat(variables('aksSettings').name, '/agentpool')]",
       "dependsOn": [
         "[resourceId('Microsoft.ContainerService/managedClusters', variables('aksSettings').name)]",
@@ -635,7 +636,7 @@
   "outputs": {
     "deployedUrl": {
       "type": "string",
-      "value": "[reference(resourceId('Microsoft.ContainerService/managedClusters', variables('aksSettings').name), '2023-01-02-preview').addonProfiles.httpApplicationRouting.config.HTTPApplicationRoutingZoneName]"
+      "value": "[reference(resourceId('Microsoft.ContainerService/managedClusters', variables('aksSettings').name), '2023-07-02-preview').addonProfiles.httpApplicationRouting.config.HTTPApplicationRoutingZoneName]"
     },
     "resourcePrefix": {
       "type": "string",

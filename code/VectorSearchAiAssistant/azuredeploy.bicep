@@ -2,9 +2,10 @@
 @allowed([
   'southcentralus'
   'eastus'
+  'eastus2'
   'westeurope'
 ])
-param location string = 'eastus'
+param location string = 'eastus2'
 
 @description('''
 Unique name for the deployed services below. Max length 15 characters, alphanumeric only:
