@@ -24,6 +24,8 @@ Param(
 
 Push-Location $($MyInvocation.InvocationName | Split-Path)
 
+Write-Host "Starting script" -ForegroundColor Yellow
+
 & ./Unified-Deploy.ps1 -acrName $acrName `
                        -resourceGroup $resourceGroup `
                        -location $location `

@@ -59,10 +59,16 @@ The following steps will guide you through the process needed to being the hacka
 Clone this repository and change to the `main` branch
 
 ```pwsh
-git clone https://github.com/lgmorand/tiger
-cd .\tiger\
+git clone https://github.com/lgmorand/hackaton-intelligent-app
+cd .\hackaton-intelligent-app\
 git checkout main
 ```
+
+<div class="warning" data-title="Warning">
+
+> If the script does not connect to the right tenant, you may have to edit the script Unified-Deploy.ps1 and add "--tenant <your-tenant-id>" to the `az login` command on line 45
+
+</div>
 
 ### Deploy the Azure core services
 
@@ -143,7 +149,7 @@ After the deployment is complete the following Azure services will be deployed.
 - Azure Networking (*not pictured*)
 
 <p align="center">
-    <img src="assets/intro/architecture.png" width="100%">
+    <img src="assets/intro/architecture.png" width="100%" alt="global architecture>
 </p>
 
 ## Run the solution locally using Visual Studio
@@ -409,9 +415,9 @@ Your team must:
 
 <div class="tip" data-title="Hints">
 
-- CosmicWorks has provided starter code for you. Search for the two methods with `TODO: Challenge 3` and complete them as instructed.
-- Think carefully about the system prompt, about how it should respond, what knowledge it is allowed to use when reasoning to create a response, what subjects it is allowed to respond to and importantly what it should not respond to.
-- Have the agent reject off topic prompts from the user (such as asks to tell a joke).
+> - CosmicWorks has provided starter code for you. Search for the two methods with `TODO: Challenge 3` and complete them as instructed.
+> - Think carefully about the system prompt, about how it should respond, what knowledge it is allowed to use when reasoning to create a response, what subjects it is allowed to respond to and importantly what it should not respond to.
+> - Have the agent reject off topic prompts from the user (such as asks to tell a joke).
 
 </div>
 
@@ -447,14 +453,14 @@ Your team must:
 
 <div class="tip" data-title="Hints">
 
-- Cosmicworks has provided the JSON files containing the initial products and customers that you loaded into the system, take one of these and modify it to create some new products or customers and uploaded it to the storage account from where you loaded the initial data and run your data loading process.
-- Experiment using prompts to elicit different response formats from the completions model:
-   - Respond with a single number or with one or two words
-   - Respond with a bulleted lists or formatted a certain way
-   - Respond using simpler syntax (e.g. explain it like I'm five)
-   - Challenge the model with prompts that require reasoning or chain of thought. For example, ask it to calculate aggregates on the data or go further and give some word problems like those you had in school.
-   - Challenge the model to explain its reasoning
-   - Request that the model list its sources
+> - Cosmicworks has provided the JSON files containing the initial products and customers that you loaded into the system, take one of these and modify it to create some new products or customers and uploaded it to the storage account from where you loaded the initial data and run your data loading process.
+> - Experiment using prompts to elicit different response formats from the completions model:
+>   - Respond with a single number or with one or two words
+>   - Respond with a bulleted lists or formatted a certain way
+>   - Respond using simpler syntax (e.g. explain it like I'm five)
+>   - Challenge the model with prompts that require reasoning or chain of thought. For example, ask it to calculate aggregates on the data or go further and give some word problems like those you had in school.
+>   - Challenge the model to explain its reasoning
+>   - Request that the model list its sources
 
 </div>
 
@@ -494,10 +500,10 @@ Your team must:
 
 <div class="tip" data-title="Hints">
 
-- With the starter solution supplied by CosmicWorks open in Visual Studio, expand the VectorSearchAiAssistant.Service project, Models, Search and take a look at Product.cs. This class is required to process the data with the Cosmos DB change feed and is also used as the schema for the document added to the Cognitive Search index. You will need to define an entity similar to this for your new type of data.
-- Extend the implementation of the `ModelRegistry` class to include your newly created data type.
-- Review the implementation of the change feed processor located in the same project under Services, CosmosDbService.cs to validate it is ready to use your new data type.
-- In SemanticKernelRAGService.cs update the setup of the `_memoryTypes` in the SemanticKernelRAGService constructor to include your new type that will be used to initialize the Search index.
+> - With the starter solution supplied by CosmicWorks open in Visual Studio, expand the VectorSearchAiAssistant.Service project, Models, Search and take a look at Product.cs. This class is required to process the data with the Cosmos DB change feed and is also used as the schema for the document added to the Cognitive Search index. You will need to define an entity similar to this for your new type of data.
+> - Extend the implementation of the `ModelRegistry` class to include your newly created data type.
+> - Review the implementation of the change feed processor located in the same project under Services, CosmosDbService.cs to validate it is ready to use your new data type.
+> - In SemanticKernelRAGService.cs update the setup of the `_memoryTypes` in the SemanticKernelRAGService constructor to include your new type that will be used to initialize the Search index.
 
 </div>
 
@@ -538,9 +544,9 @@ Your team must:
 
 <div class="tip" data-title="Hints">
 
-- You might want to try building this first in a simple console project.
-- You should use the SequentialPlanner from Semantic Kernel to create and execute a plan around the prompt, so that it can choose when to invoke your plugins.
-- You will have to update how you handle the completion response from the SequentialPlanner.
+> - You might want to try building this first in a simple console project.
+> - You should use the SequentialPlanner from Semantic Kernel to create and execute a plan around the prompt, so that it can choose when to invoke your plugins.
+> - You will have to update how you handle the completion response from the SequentialPlanner.
 
 </div>
 
@@ -579,15 +585,16 @@ Your team must:
 
 <div class="tip" data-title="Hints">
 
-- For all interactions with Azure OpenAI, you will want to use the LLM Tool in Prompt Flow.
-- To search for context data from Cognitive Search you will want the Vector DB Lookup Tool.
-- For storing the results back to Cosmos DB, consider using the Python Tool.
+> - For all interactions with Azure OpenAI, you will want to use the LLM Tool in Prompt Flow.
+> - To search for context data from Cognitive Search you will want the Vector DB Lookup Tool.
+> - For storing the results back to Cosmos DB, consider using the Python Tool.
 
 </div>
 
 ### Success Criteria
 
 To complete this challenge successfully, you must:
+
 - Demonstrate to your coach the PromptFlow you created in Azure Machine Learning.
 - Deploy your Prompt Flow endpoint and integrate that into the solution.
 
