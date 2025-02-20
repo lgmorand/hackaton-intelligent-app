@@ -294,16 +294,16 @@ Your team must:
 
 <div class="tip" data-title="Hints">
 
-- CosmicWorks has provided you a script to deploy the foundation of your Azure environment. See the instructions in the README.md of the repo.
-- You will need to deploy the following Azure services within a new Resource Group:
-  - Azure Cosmos DB
-  - Azure OpenAI service
-  - Azure Cognitive Search
-  - Azure Container Apps service that will host:
-    - A web service that supports running the front-end Blazor web app in a Docker container
-    - A web service that supports running the back-end web API in a Docker container
-  - Azure Storage Account (not enabled for hierarchical namespace)
-- You will load data and deploy code into these services in a later challenge.
+> - CosmicWorks has provided you a script to deploy the foundation of your Azure environment. See the instructions in the README.md of the repo.
+> - You will need to deploy the following Azure services within a new Resource Group:
+>  - Azure Cosmos DB
+>  - Azure OpenAI service
+>  - Azure Cognitive Search
+>  - Azure Container Apps service that will host:
+>    - A web service that supports running the front-end Blazor web app in a Docker container
+>    - A web service that supports running the back-end web API in a Docker container
+>  - Azure Storage Account (not enabled for hierarchical namespace)
+>- You will load data and deploy code into these services in a later challenge.
 
 </div>
 
@@ -350,10 +350,10 @@ Your team must:
 
 <div class="tip" data-title="Hints">
 
-- CosmicWorks suggest using the Azure Cosmos DB Desktop Data Migration Tool to load their sample files from their Azure Storage into your instance of Cosmos DB. They suggest you do a "Quick Install" of the tool. They have provided the `migrationsettings.template.json` in the root of the starter repo that contains the parameters you should use with this tool. You need to replace the `{{cosmosConnectionString}}` instances in the JSON file with the connection string to your deployed instance of Cosmos DB.
-- Search thru the solution for the `TODO: Challenge 2` comments and follow the instructions provided.
-- Think about how you can use the Cosmos DB Change Feed to trigger the creation of vector embeddings for new/updated products and customers.
-- Think about how you build the logic for accessing the Azure OpenAI service to perform the vector embeddings of the product and customer documents. You will use this same logic layer to perform other Azure OpenAI tasks in later challenges.
+> - CosmicWorks suggest using the Azure Cosmos DB Desktop Data Migration Tool to load their sample files from their Azure Storage into your instance of Cosmos DB. They suggest you do a "Quick Install" of the tool. They have provided the `migrationsettings.template.json` in the root of the starter repo that contains the parameters you should use with this tool. You need to replace the `{{cosmosConnectionString}}` instances in the JSON file with the connection string to your deployed instance of Cosmos DB.
+> - Search thru the solution for the `TODO: Challenge 2` comments and follow the instructions provided.
+> - Think about how you can use the Cosmos DB Change Feed to trigger the creation of vector embeddings for new/updated products and customers.
+> - Think about how you build the logic for accessing the Azure OpenAI service to perform the vector embeddings of the product and customer documents. You will use this same logic layer to perform other Azure OpenAI tasks in later challenges.
 
 </div>
 
