@@ -1,0 +1,2 @@
+- [ ] dans les prerequis, on demande Visual studio mais je sais pas si VSCode ca suffit
+- [ ] j'ai passé AZ CLI à 3.69 et helm à 3.17 pour tester avec des versions récentes

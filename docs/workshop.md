@@ -44,7 +44,7 @@ This hackathon will challenge you and your team to launch a POC of a chat interf
 ## Prerequisites
 
 - Azure Subscription
-- Visual Studio
+- Visual Studio (Communitity Edition is fine for this lab)
 - .NET 7 SDK
 - Docker Desktop
 - Azure CLI 2.69.0
@@ -83,7 +83,6 @@ git checkout main
 
 </div>
 
-
 > **NOTE**:
 >
 >By default, the deployment script will attempt to create new Azure Open AI model deployments for the `gpt-35-turbo` and `text-embedding-ada-002` models. If you already have deployments for these models, you can skip the deployment by passing the following parameters to the script:
@@ -91,17 +90,18 @@ git checkout main
 >```pwsh
 >-openAiName <open-ai-name> -openAiRg <open-ai-resource-group> -openAiCompletionsDeployment <completions-deployment-name> -openAiEmbeddingsDeployment <embeddings-deployment-name> -stepDeployOpenAi $false
 >```
->In case you will defer the Open AI deployment to the script, make sure have enough Tokens Per Minute (TPM) in thousands quota available in your subscription. By default, the script will attempt to set a value of 120K for each deployment. In case you need to change this value, you can edit lines 22 and 29 in the `starter-artifacts\code\VectorSearchAiAssistant\scripts\Deploy-OpenAi.ps1` file.
+>In case you will defer the Open AI deployment to the script, make sure have enough Tokens Per Minute (TPM) in thousands quota available in your subscription. By default, the script will attempt to set a value of 120K for each deployment. In case you need to change this value, you can edit lines 22 and 29 in the `code\VectorSearchAiAssistant\scripts\Deploy-OpenAi.ps1` file.
 
 >If using your own Azure OpenAI account, it will be necessary to update the appsettings.json file in the `ChatServiceWebApi` project to use the model deployment names used in your existing Azure OpenAI account. See **Configure Local Settings section below** for more details.
 
 ### Decide on the containerization approach
 
 The deployment script supports two types of containerization:
+
 - [Azure Kubernetes Service - AKS](https://azure.microsoft.com/services/kubernetes-service) - this option allows you to deploy the application into an AKS cluster. This option is more complex to set up, but it provides more flexibility and control over the deployment. To use AKS, pass the following parameter to the deployment script:
-    ```pwsh
-    -deployAks $true
-    ```
+  ```pwsh
+  -deployAks $true
+  ```
 - [Azure Container Apps - ACA](https://azure.microsoft.com/products/container-apps) - this option allows you to deploy containerized applications without having to manage the underlying infrastructure and thus is an easier option to get started with.
 
 For the purpose of this hackathon, you can whatever your preference is, either AKS or ACA.
@@ -292,7 +292,7 @@ Your team must:
 2. Set up your development environment
 3. Deploy the Azure services needed to support the chat interface
 
-### Hints
+<div class="tip" data-title="Hints">
 
 - CosmicWorks has provided you a script to deploy the foundation of your Azure environment. See the instructions in the README.md of the repo.
 - You will need to deploy the following Azure services within a new Resource Group:
@@ -304,6 +304,8 @@ Your team must:
     - A web service that supports running the back-end web API in a Docker container
   - Azure Storage Account (not enabled for hierarchical namespace)
 - You will load data and deploy code into these services in a later challenge.
+
+</div>
 
 ### Success Criteria
 
@@ -346,12 +348,14 @@ Your team must:
 3. Create a process to index product and customer data from Cosmos DB using the change feed to load the documents into an Azure Cognitive Search vector index. They have provided a starter template for you that they had created for another effort.
 4. Verify that the data was loaded into Cosmos DB and Cognitive Search.
 
-### Hints
+<div class="tip" data-title="Hints">
 
 - CosmicWorks suggest using the Azure Cosmos DB Desktop Data Migration Tool to load their sample files from their Azure Storage into your instance of Cosmos DB. They suggest you do a "Quick Install" of the tool. They have provided the `migrationsettings.template.json` in the root of the starter repo that contains the parameters you should use with this tool. You need to replace the `{{cosmosConnectionString}}` instances in the JSON file with the connection string to your deployed instance of Cosmos DB.
 - Search thru the solution for the `TODO: Challenge 2` comments and follow the instructions provided.
 - Think about how you can use the Cosmos DB Change Feed to trigger the creation of vector embeddings for new/updated products and customers.
 - Think about how you build the logic for accessing the Azure OpenAI service to perform the vector embeddings of the product and customer documents. You will use this same logic layer to perform other Azure OpenAI tasks in later challenges.
+
+</div>
 
 ### Success Criteria
 
@@ -403,11 +407,13 @@ Your team must:
 3. Upload the system prompt file you created at the previous step to the Azure Storage Account, place it under the path `system-prompt / RetailAssistant` overwriting the file that is there.
 4. Store the user's questions and the responses that were generated so the system can reload them in the future.
 
-### Hints
+<div class="tip" data-title="Hints">
 
 - CosmicWorks has provided starter code for you. Search for the two methods with `TODO: Challenge 3` and complete them as instructed.
 - Think carefully about the system prompt, about how it should respond, what knowledge it is allowed to use when reasoning to create a response, what subjects it is allowed to respond to and importantly what it should not respond to.
 - Have the agent reject off topic prompts from the user (such as asks to tell a joke).
+
+</div>
 
 ### Success Criteria
 
@@ -439,7 +445,7 @@ Your team must:
 1. Load new data using the data loading mechanism you created in a previous challenge.
 2. Ask a question through the prompt interface and see if it returns an answer about the new data you loaded.
 
-### Hints
+<div class="tip" data-title="Hints">
 
 - Cosmicworks has provided the JSON files containing the initial products and customers that you loaded into the system, take one of these and modify it to create some new products or customers and uploaded it to the storage account from where you loaded the initial data and run your data loading process.
 - Experiment using prompts to elicit different response formats from the completions model:
@@ -449,6 +455,8 @@ Your team must:
    - Challenge the model with prompts that require reasoning or chain of thought. For example, ask it to calculate aggregates on the data or go further and give some word problems like those you had in school.
    - Challenge the model to explain its reasoning
    - Request that the model list its sources
+
+</div>
 
 ### Success Criteria
 
@@ -484,12 +492,14 @@ Your team must:
 4. Load data of the new type into Cosmos DB.
 5. Use the chat interface to ask questions about the new data type.
 
-### Hints
+<div class="tip" data-title="Hints">
 
 - With the starter solution supplied by CosmicWorks open in Visual Studio, expand the VectorSearchAiAssistant.Service project, Models, Search and take a look at Product.cs. This class is required to process the data with the Cosmos DB change feed and is also used as the schema for the document added to the Cognitive Search index. You will need to define an entity similar to this for your new type of data.
 - Extend the implementation of the `ModelRegistry` class to include your newly created data type.
 - Review the implementation of the change feed processor located in the same project under Services, CosmosDbService.cs to validate it is ready to use your new data type.
 - In SemanticKernelRAGService.cs update the setup of the `_memoryTypes` in the SemanticKernelRAGService constructor to include your new type that will be used to initialize the Search index.
+
+</div>
 
 ### Success Criteria
 
@@ -526,11 +536,13 @@ Your team must:
 4. Create a plan to respond to requests.
 5. Replace the logic in the SemanticKernalRAGService.cs GetResponse method with one that will first make a plan to decide if your functions should be used or not, and then execute the completion request accordingly.
 
-### Hints
+<div class="tip" data-title="Hints">
 
 - You might want to try building this first in a simple console project.
 - You should use the SequentialPlanner from Semantic Kernel to create and execute a plan around the prompt, so that it can choose when to invoke your plugins.
 - You will have to update how you handle the completion response from the SequentialPlanner.
+
+</div>
 
 ### Success Criteria
 
@@ -565,11 +577,13 @@ Your team must:
     - Request the completion
     - Store and return the result
 
-### Hints
+<div class="tip" data-title="Hints">
 
 - For all interactions with Azure OpenAI, you will want to use the LLM Tool in Prompt Flow.
 - To search for context data from Cognitive Search you will want the Vector DB Lookup Tool.
 - For storing the results back to Cosmos DB, consider using the Python Tool.
+
+</div>
 
 ### Success Criteria
 
