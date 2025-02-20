@@ -26,13 +26,17 @@ CosmicWorks has big plans for their retail site. They're eager to launch a POC o
 
 The scenario centers around a consumer retail "Intelligent Agent" that allows users to ask questions on vectorized product, customer and sales order data stored in a database. The data in this solution is the Cosmic Works sample for Azure Cosmos DB. This data is an adapted subset of the Adventure Works 2017 dataset for a retail Bike Shop that sells bicycles, biking accessories, components and clothing.
 
+<div class="tip" data-title="Tip">
+
 > BUT you can bring your own data instead.
+
+</div>
 
 This hackathon will challenge you and your team to launch a POC of a chat interface where users can interact with a virtual agent to find product and account information. Through the course of the hackathon, you will modify an existing application to do the following:
 
-- Store the chat messages in an Azure Cosmos DB database, grouped by chat sessions
-- Use Azure OpenAI Service to create vector embeddings and chat completions
-- Use Azure Cognitive Search as a vector database to search for product and account information by the vector embeddings
+- Store the chat messages in an **Azure Cosmos DB database**, grouped by chat sessions
+- Use **Azure OpenAI Service** to create vector embeddings and chat completions
+- Use **Azure Cognitive Search** as a vector database to search for product and account information by the vector embeddings
 - Load up existing product and account information into Azure Cosmos DB and the Azure Cognitive Search vector index
 - Create a process that manages the conversation flow, vectorization, search, data handling, and response generation
 - Externally manage system prompts
@@ -44,8 +48,7 @@ This hackathon will challenge you and your team to launch a POC of a chat interf
 - .NET 7 SDK
 - Docker Desktop
 - Azure CLI 2.69.0
-- Helm v3.11.1 or greater - [https://helm.sh/](https://helm.sh/) (for AKS)
-- Subscription with access to the Azure OpenAI Service. Start here to [Request Access to Azure OpenAI Service](https://customervoice.microsoft.com/Pages/ResponsePage.aspx?id=v4j5cvGGr0GRqy180BHbR7en2Ais5pxKtso_Pz4b1_xUOFA5Qk1UWDRBMjg0WFhPMkIzTzhKQ1dWNyQlQCN0PWcu)
+- Helm v3.17.0 or greater - [https://helm.sh/](https://helm.sh/) (for AKS)
 
 ## Setting up your development environment
 
@@ -56,25 +59,30 @@ The following steps will guide you through the process needed to being the hacka
 Clone this repository and change to the `main` branch
 
 ```pwsh
-git clone https://github.com/Azure/Build-Modern-AI-Apps-Hackathon
-cd .\Build-Modern-AI-Apps-Hackathon\
+git clone https://github.com/lgmorand/tiger
+cd .\tiger\
 git checkout main
 ```
 
 ### Deploy the Azure core services
 
 1. Open the PowerShell command line and navigate to the directory where you cloned the repo.
-2. Navigate into the `starter-artifacts\code\VectorSearchAiAssistant` folder.
-3. Run the following PowerShell script to provision the infrastructure and deploy the API and frontend. Provide the name of a NEW resource group that will be created. This will provision all of the required infrastructure, deploy the API and web app services into Azure Kubernetes Service (AKS) if using the deployAks flag below or Azure Container Apps (ACA), and import data into Cosmos DB. 
+2. Navigate into the `code\VectorSearchAiAssistant` folder.
+3. Run the following PowerShell script to provision the infrastructure and deploy the API and frontend. Provide the name of a NEW resource group that will be created. This will provision all of the required infrastructure, deploy the API and web app services into Azure Kubernetes Service (AKS) if using the deployAks flag below or Azure Container Apps (ACA), and import data into Cosmos DB.
 
 ```pwsh
 ./scripts/Starter-Deploy.ps1  -resourceGroup <resource-group-name> -location <location> -subscription <subscription-id> -deployAks 1
 ```
 
+<div class="tip" data-title="Note">
+
 >**NOTE**:
 >
 >If `<resource-group-name>` already exists, your user must have `Owner` permissions on the resource group.
 >If `<resource-group-name>` does not exist exists, the deployment script will create it. In this case, your user must have `Owner` permissions on the subscription in which the resource group will be created.
+
+</div>
+
 
 > **NOTE**:
 >
@@ -135,7 +143,7 @@ After the deployment is complete the following Azure services will be deployed.
 - Azure Networking (*not pictured*)
 
 <p align="center">
-    <img src="img/architecture.png" width="100%">
+    <img src="assets/intro/architecture.png" width="100%">
 </p>
 
 ## Run the solution locally using Visual Studio
