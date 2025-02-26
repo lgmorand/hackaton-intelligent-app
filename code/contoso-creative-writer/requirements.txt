@@ -1,2 +1,4 @@
 click
 rich-click
+promptflow>=1.8.0
+promptflow-tools>=1.0.0

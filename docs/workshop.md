@@ -1,613 +1,868 @@
 ---
 published: true
 type: workshop
-title: Build an Intelligent App
-short_title: Build an Intelligent App
-description: In this workshop you will learn how to build an intelligent app leveraging Azure services
+title: Creative Writing Assistant - Working with Agents using Prompty (Python Implementation)
+short_title: Build a multi-tasking assistant with Azure OpenAI
+description: Using Azure OpenAI agent with Python, integrating Bing Search API and Azure AI Search, to create articles based on user topics and instruction.
 level: intermediate # Required. Can be 'beginner', 'intermediate' or 'advanced'
 navigation_numbering: false
+navigation_levels: 3
 authors: # Required. You can add as many authors as needed
   - Fethi Dilmi
   - Louis-Guillaume Morand
-
 contacts: # Required. Must match the number of authors
   - "@fethidilmi"
   - "@lgmorand"
 duration_minutes: 400
-tags: azure, ipaas, IA, openai, cosmosdb, bing
-navigation_levels: 3
+tags: azure, azure openai, azure bing web, azure cognitive search, cosmosdb, azure container apps
 ---
 
-# Introduction
 
-## Build and Modernize AI Applications Hackathon
+# Build a multi-tasking assistant with Azure OpenAI
 
-CosmicWorks has big plans for their retail site. They're eager to launch a POC of a simple chat interface where users can interact with a virtual agent to find product and account information.
+<div class="Warning" data-title="Warning">
 
-The scenario centers around a consumer retail "Intelligent Agent" that allows users to ask questions on vectorized product, customer and sales order data stored in a database. The data in this solution is the Cosmic Works sample for Azure Cosmos DB. This data is an adapted subset of the Adventure Works 2017 dataset for a retail Bike Shop that sells bicycles, biking accessories, components and clothing.
+> This section is to be reviewed after consolidation
+</div>
 
-<div class="tip" data-title="Tip">
+## Pre-requisites
 
-> BUT you can bring your own data instead.
+Before starting this lab, be sure to set your Azure environment :
+
+- An Azure Subscription with the **Owner** role to create and manage the labs' resources and deploy the infrastructure as code
+
+To be able to do the lab content you will also need:
+
+- Basic understanding of Azure resources.
+- A Github account (Free, Team or Enterprise)
+- Create a [fork][repo-fork] of the repository from the **main** branch to help you keep track of your potential changes
+
+3 development options are available:
+  - 🥇 **Preferred method** : Pre-configured GitHub Codespace
+  - 🥈 Local Devcontainer
+  - 🥉 Local Dev Environment with all the prerequisites detailed below
+
+<div class="tip" data-title="Tips">
+
+> To focus on the main purpose of the lab, we encourage the usage of devcontainers/codespace as they abstract the dev environment configuration, and avoid potential local dependencies conflict.
+> 
+> You could decide to run everything without relying on a devcontainer : To do so, make sure you install all the prerequisites detailed below.
 
 </div>
 
-This hackathon will challenge you and your team to launch a POC of a chat interface where users can interact with a virtual agent to find product and account information. Through the course of the hackathon, you will modify an existing application to do the following:
+## Code of Conduct
 
-- Store the chat messages in an **Azure Cosmos DB database**, grouped by chat sessions
-- Use **Azure OpenAI Service** to create vector embeddings and chat completions
-- Use **Azure Cognitive Search** as a vector database to search for product and account information by the vector embeddings
-- Load up existing product and account information into Azure Cosmos DB and the Azure Cognitive Search vector index
-- Create a process that manages the conversation flow, vectorization, search, data handling, and response generation
-- Externally manage system prompts
+This project has adopted the [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/).
 
-## Prerequisites
+Resources:
 
-- Azure Subscription
-- Visual Studio (Communitity Edition is fine for this lab)
-- .NET 7 SDK
-- Docker Desktop
-- Azure CLI 2.69.0
-- Helm v3.17.0 or greater - [https://helm.sh/](https://helm.sh/) (for AKS)
+- [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/)
+- [Microsoft Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/)
+- Contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with questions or concerns
 
-## Setting up your development environment
+For more information see the [Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/) or
+contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additional questions or comments.
 
-The following steps will guide you through the process needed to being the hackathon.
+## Responsible AI Guidelines
 
-### Clone this repo
+This project follows below responsible AI guidelines and best practices, please review them before using this project:
 
-Clone this repository and change to the `main` branch
+- [Microsoft Responsible AI Guidelines](https://www.microsoft.com/en-us/ai/responsible-ai)
+- [Responsible AI practices for Azure OpenAI models](https://learn.microsoft.com/en-us/legal/cognitive-services/openai/overview)
+- [Safety evaluations transparency notes](https://learn.microsoft.com/en-us/azure/ai-studio/concepts/safety-evaluations-transparency-note)
 
-```pwsh
-git clone https://github.com/lgmorand/hackaton-intelligent-app
-cd .\hackaton-intelligent-app\
-git checkout main
+
+<!-- ******************************************************************************************************* -->
+<!-- ******************************************************************************************************* -->
+<!-- ******************************************************************************************************* -->
+<!-- ******************************************************************************************************* -->
+
+---
+
+# Lab 1 - Play with Azure Container Apps
+
+> TO BE COMPLETED
+
+<!-- ******************************************************************************************************* -->
+<!-- ******************************************************************************************************* -->
+<!-- ******************************************************************************************************* -->
+<!-- ******************************************************************************************************* -->
+
+---
+
+# Lab 2 - Topic to be defined
+
+> TO BE COMPLETED (I think we could may be skip this one)
+
+<!-- ******************************************************************************************************* -->
+<!-- ******************************************************************************************************* -->
+<!-- ******************************************************************************************************* -->
+<!-- ******************************************************************************************************* -->
+
+---
+
+# Lab 3 - Deploy a Creative Writing Assistant
+
+## Overview
+
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/Azure-Samples/contoso-creative-writer) [![Open in Dev Containers](https://img.shields.io/static/v1?style=for-the-badge&label=Dev%20Containers&message=Open&color=blue&logo=visualstudiocode)](https://vscode.dev/redirect?url=vscode://ms-vscode-remote.remote-containers/cloneInVolume?url=https://github.com/azure-samples/contoso-creative-writer) 
+
+Contoso Creative Writer is an app that will help you write well researched, product specific articles. Enter the required information and then click "Start Work". To watch the steps in the agent workflow select the debug button in the bottom right corner of the screen. The result will begin writing once the agents complete the tasks to write the article.
+
+This sample demonstrates how to create and work with AI agents driven by [Azure OpenAI](https://learn.microsoft.com/en-us/azure/ai-services/openai/). It includes a FastAPI app that takes a topic and instruction from a user and then calls a research agent that uses the [Bing Search API](https://www.microsoft.com/en-us/bing/apis/bing-web-search-api) to research the topic, a product agent that uses [Azure AI Search](https://azure.microsoft.com/en-gb/products/ai-services/ai-search) to do a semantic similarity search for related products from a vector store, a writer agent to combine the research and product information into a helpful article, and an editor agent to refine the article that's finally presented to the user.
+
+![App preview](./assets/crwriter-deployment/app_preview.png)
+
+![Agent workflow preview](./assets/crwriter-deployment/agent.png)
+
+This project template provides the following features:
+
+* [Azure OpenAI](https://learn.microsoft.com/en-us/azure/ai-services/openai/) to drive the various agents
+* [Prompty](https://prompty.ai/) to create, manage and evaluate the prompt into our code.
+* [Bing Search API](https://www.microsoft.com/en-us/bing/apis/bing-web-search-api) to research the topic provided
+* [Azure AI Search](https://azure.microsoft.com/en-gb/products/ai-services/ai-search) for performing semantic similarity search
+  
+![Architecture Digram](./assets/crwriter-deployment/Creative_writing_aca.png)
+
+## Azure account requirements
+
+**IMPORTANT:** In order to deploy and run this example, you'll need:
+
+* **Azure account**. If you're new to Azure, [get an Azure account for free](https://azure.microsoft.com/free/cognitive-search/) and you'll get some free Azure credits to get started. See [guide to deploying with the free trial](docs/deploy_lowcost.md).
+* **Azure subscription with access enabled for the Azure OpenAI Service**. If your access request to Azure OpenAI Service doesn't match the [acceptance criteria](https://learn.microsoft.com/legal/cognitive-services/openai/limited-access?context=%2Fazure%2Fcognitive-services%2Fopenai%2Fcontext%2Fcontext), you can use [OpenAI public API](https://platform.openai.com/docs/api-reference/introduction) instead.
+    - Ability to deploy `gpt-4o` and `gpt-4o-mini`.
+    - We recommend using `eastus2`, as this region has access to all models and services required. 
+* **Azure subscription with access enabled for [Bing Search API](https://www.microsoft.com/en-us/bing/apis/bing-web-search-api)**
+* **Azure subscription with access enabled for [Azure AI Search](https://azure.microsoft.com/en-gb/products/ai-services/ai-search)**
+
+## Getting Started
+
+You have a few options for setting up this project.
+The easiest way to get started is GitHub Codespaces, since it will setup all the tools for you, but you can also [set it up locally](#local-environment).
+
+### GitHub Codespaces
+
+1. You can run this template virtually by using GitHub Codespaces. The button will open a web-based VS Code instance in your browser:
+   
+    [![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/Azure-Samples/agent-openai-python-prompty)
+
+2. Open a terminal window.
+3. Sign in to your Azure account. You'll need to login to both the Azure Developer CLI and Azure CLI:
+
+    i. First with Azure Developer CLI 
+
+    ```shell
+    azd auth login
+    ```
+
+    ii. Then sign in with Azure CLI 
+    
+    ```shell
+    az login --use-device-code
+    ```
+
+4. Provision the resources and deploy the code:
+
+    ```shell
+    azd up
+    ```
+
+    You will be prompted to select some details about your deployed resources, including location. As a reminder we recommend `East US 2` as the region for this project.
+    Once the deployment is complete you should be able to scroll up in your terminal and see the url that the app has been deployed to. It should look similar to this 
+    `Ingress Updated. Access your app at https://env-name.codespacesname.eastus2.azurecontainerapps.io/`. Navigate to the link to try out the app straight away! 
+
+5. Once the above steps are completed you can [test the sample](#testing-the-sample). 
+
+### VS Code Dev Containers
+
+A related option is VS Code Dev Containers, which will open the project in your local VS Code using the [Dev Containers extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers):
+
+1. Start Docker Desktop (install it if not already installed)
+2. Open the project:
+   
+    [![Open in Dev Containers](https://img.shields.io/static/v1?style=for-the-badge&label=Dev%20Containers&message=Open&color=blue&logo=visualstudiocode)](https://vscode.dev/redirect?url=vscode://ms-vscode-remote.remote-containers/cloneInVolume?url=https://github.com/Azure-Samples/agent-openai-python-prompty.git)
+
+3. In the VS Code window that opens, once the project files show up (this may take several minutes), open a terminal window.
+
+4. Install required packages:
+
+    ```shell
+    cd src/api
+    pip install -r requirements.txt
+    ```
+   Once you've completed these steps jump to [deployment](#deployment). 
+
+### Local environment
+
+#### Prerequisites
+
+* [Azure Developer CLI (azd)](https://aka.ms/install-azd)
+* [Python 3.10+](https://www.python.org/downloads/)
+* [Docker Desktop](https://www.docker.com/products/docker-desktop/)
+* [Git](https://git-scm.com/downloads)
+
+**Note for Windows users:** If you are not using a container to run this sample, our hooks are currently all shell scripts. To provision this sample correctly while we work on updates we recommend using [git bash](https://gitforwindows.org/). 
+
+#### Initializing the project
+
+1. Create a new folder and switch to it in the terminal, then run this command to download the project code:
+
+    ```shell
+    azd init -t agent-openai-python-prompty
+    ```
+    Note that this command will initialize a git repository, so you do not need to clone this repository.
+
+2. Install required packages:
+
+    ```shell
+    cd src/api
+    pip install -r requirements.txt
+    ```
+
+## Deployment
+
+Once you've opened the project in [Codespaces](#github-codespaces), [Dev Containers](#vs-code-dev-containers), or [locally](#local-environment), you can deploy it to Azure.
+
+1. Sign in to your Azure account. You'll need to login to both the Azure Developer CLI and Azure CLI:
+
+    i. First with Azure Developer CLI 
+
+    ```shell
+    azd auth login
+    ```
+
+    ii. Then sign in with Azure CLI 
+    
+    ```shell
+    az login --use-device-code
+    ```
+
+    If you have any issues with that command, you may also want to try `azd auth login --use-device-code`.
+
+    This will create a folder under `.azure/` in your project to store the configuration for this deployment. You may have multiple azd environments if desired.
+
+2. Provision the resources and deploy the code:
+
+    ```shell
+    azd up
+    ```
+
+    This project uses `gpt-4o` and `gpt-4o-mini which may not be available in all Azure regions. Check for [up-to-date region availability](https://learn.microsoft.com/azure/ai-services/openai/concepts/models#standard-deployment-model-availability) and select a region during deployment accordingly. We recommend using East US 2 for this project.
+
+   After running azd up, you may be asked the following question during `Github Setup`:
+
+   ```shell 
+   Do you want to configure a GitHub action to automatically deploy this repo to Azure when you push code changes?
+   (Y/n) Y
+   ```
+
+   You should respond with `N`, as this is not a necessary step, and takes some time to set up. 
+
+
+## Testing the sample
+
+This sample repository contains an agents folder that includes subfolders for each agent. Each agent folder contains a prompty file where the agent's prompty is defined and a python file with the code used to run it. Exploring these files will help you understand what each agent is doing. The agent's folder also contains an `orchestrator.py` file that can be used to run the entire flow and to create an article. When you ran `azd up` a catalogue of products was uploaded to the Azure AI Search vector store and index name `contoso-products` was created. 
+
+To test the sample: 
+
+1. Run the example web app locally using a FastAPI server. 
+
+    First navigate to the src/api folder 
+    ```shell
+    cd ./src/api
+    ```
+
+    Run the FastAPI webserver
+    ```shell
+    fastapi dev main.py
+    ```
+    
+    **Important Note**: If you are running in Codespaces, you will need to change the visibility of the API's 8000 and 5173 ports to `public` in your VS Code terminal's `PORTS` tab. The ports tab should look like this:
+
+    ![Screenshot showing setting port-visibility](./assets/crwriter-deployment/ports-resized.png)
+
+
+    If you open the server link in a browser, you will see a URL not found error, this is because we haven't created a home url route in FastAPI. We have instead created a `/get_article` route which is used to pass context and instructions directly to the get_article.py file which runs the agent workflow.
+
+   (Optional) We have created a web interface which we will run next, but you can test the API is working as expected by running this in the browser:
+    ```
+    http://127.0.0.1:8080/get_article?context=Write an article about camping in alaska&instructions=find specifics about what type of gear they would need and explain in detail
+    ```
+
+3. Once the FastAPI server is running you can now run the web app. To do this open a new terminal window and navigate to the web folder using this command:
+    ```shell
+    cd ./src/web
+    ```
+    
+    First install node packages:
+    ```shell
+    npm install
+    ```
+
+    Then run the web app with a local dev web server:
+    ```shell
+    npm run dev
+    ```
+
+    This will launch the app, where you can use example context and instructions to get started. 
+    On the 'Creative Team' page you can examine the output of each agent by clicking on it. The app should look like this:
+
+    Change the instructions and context to create an article of your choice. 
+
+4. For debugging purposes you may want to test in Python using the orchestrator Logic
+
+    To run the sample using just the orchestrator logic use the following command:
+
+    ```shell
+    cd ./src/api
+    python -m orchestrator
+
+    ```
+
+## Tracing
+
+To activate the Prompty tracing server:
+
+```
+export LOCAL_TRACING=true
 ```
 
-<div class="warning" data-title="Warning">
+Then start the orchestrator:
 
-> If the script does not connect to the right tenant, you may have to edit the script Unified-Deploy.ps1 and add "--tenant <your-tenant-id>" to the `az login` command on line 45
-
-</div>
-
-### Deploy the Azure core services
-
-1. Open the PowerShell command line and navigate to the directory where you cloned the repo.
-2. Navigate into the `code\VectorSearchAiAssistant` folder.
-3. Run the following PowerShell script to provision the infrastructure and deploy the API and frontend. Provide the name of a NEW resource group that will be created. This will provision all of the required infrastructure, deploy the API and web app services into Azure Kubernetes Service (AKS) if using the deployAks flag below or Azure Container Apps (ACA), and import data into Cosmos DB.
-
-```pwsh
-./scripts/Starter-Deploy.ps1  -resourceGroup <resource-group-name> -location <location> -subscription <subscription-id> -deployAks 1
+```
+cd ./src/api
+python -m orchestrator
 ```
 
-<div class="tip" data-title="Note">
+Once you can see the article has been generated, a `.runs` folder should appear in the `./src/api` . Select this folder and click the `.tracy` file in it. 
+This shows you all the Python functions that were called in order to generate the article. Explore each section and see what helpful information you can find.
 
->**NOTE**:
+## Evaluating results
+
+Contoso Creative Writer uses evaluators to assess application response quality. The 4 metrics the evaluators in this project assess are Coherence, Fluency, Relevance and Groundedness. A custom `evaluate.py` script has been written to run all evaulations for you.
+
+1. To run the script run the following commands:
+
+```shell
+cd ./src/api
+python -m evaluate.evaluate
+```
+
+- Check: You see scores for Coherence, Fluency, Relevance and Groundedness.
+- Check: The scores are between 1 and 5
+  
+
+2. To understand what is being evaluated open the `src/api/evaluate/eval_inputs.jsonl` file.
+   - Observe that 3 examples of research, product and assignment context are stored in this file. This data will be sent to the orchestrator so that each example will have:
+   - each example will have the evaluations run and will incoperate all of the context, research, products, and final article when grading the response.
+        
+
+## Setting up CI/CD with GitHub actions
+
+This template is set up to run CI/CD when you push changes to your repo. When CI/CD is configured, evaluations will in GitHub actions and then automatically deploy your app on push to main.
+
+To set up CI/CD with GitHub actions on your repository, run the following command:
+```shell
+azd pipeline config
+```
+
+## Guidance
+
+### Region Availability
+
+This template uses `gpt-4o` and `gpt-4o-mini` which may not be available in all Azure regions. Check for [up-to-date region availability](https://learn.microsoft.com/azure/ai-services/openai/concepts/models#standard-deployment-model-availability) and select a region during deployment accordingly
+  * We recommend using East US 2
+
+### Costs
+
+You can estimate the cost of this project's architecture with [Azure's pricing calculator](https://azure.microsoft.com/pricing/calculator/)
+
+* **Azure subscription with access enabled for [Bing Search API](https://www.microsoft.com/en-us/bing/apis/bing-web-search-api)**
+* **Azure subscription with access enabled for [Azure AI Search](https://azure.microsoft.com/en-gb/products/ai-services/ai-search)**
+
+### Security
+
+> [NOTE]
+> When implementing this template please specify whether the template uses Managed Identity or Key Vault
+
+This template has either [Managed Identity](https://learn.microsoft.com/entra/identity/managed-identities-azure-resources/overview) or Key Vault built in to eliminate the need for developers to manage these credentials. Applications can use managed identities to obtain Microsoft Entra tokens without having to manage any credentials. Additionally, we have added a [GitHub Action tool](https://github.com/microsoft/security-devops-action) that scans the infrastructure-as-code files and generates a report containing any detected issues. To ensure best practices in your repo we recommend anyone creating solutions based on our templates ensure that the [Github secret scanning](https://docs.github.com/code-security/secret-scanning/about-secret-scanning) setting is enabled in your repos.
+
+## Resources
+
+* [Prompty Documentation](https://prompty.ai/)
+* [Quickstart: Multi-agent applications using Azure OpenAI article](https://learn.microsoft.com/en-us/azure/developer/ai/get-started-multi-agents?tabs=github-codespaces): The Microsoft Learn Quickstart article for this sample, walks through both deployment and the relevant code for orchestrating multi-agents in chat.
+* [Develop Python apps that use Azure AI services](https://learn.microsoft.com/azure/developer/python/azure-ai-for-python-developers)
+
+<!-- ******************************************************************************************************* -->
+<!-- ******************************************************************************************************* -->
+<!-- ******************************************************************************************************* -->
+<!-- ******************************************************************************************************* -->
+
+---
+
+# Lab 4 - Under the hood of Contoso Creative Writer
+
+## Overview
+Building Large Language Model (LLM) applications​ is hard! Companies want to build AI solutions, but how can they do this in a reliable, reproducible and observable way?​
+
+- Getting LLM apps to work with various real world inputs ​
+- Debugging (local and production)​ to understand failures
+- Setting up and managing production infrastructure automation
+
+This workshop will introduce new tooling that provides practical solutions to these problems. 
+
+## Setting Up Environment
+
+In this section we will focus on four key outcomes, each split into their own notebook:
+
+1. [Understanding agents and prompt engineering with Prompty.](./assets/crwriter-challenges/workshop-1-intro.ipynb)
+2. [Utilizing Prompty tracing for debugging and observability.](./assets/crwriter-challenges/workshop-2-tracing.ipynb)
+3. [Building and running Contoso Creative Writer.](./assets/crwriter-challenges/workshop-3-build.ipynb)
+4. [Setting up automated evaluations with GitHub Actions.](./assets/crwriter-challenges/workshop-4-ci-cd.ipynb)
+
+Open the [LAB-SETUP.ipynb](./assets/crwriter-challenges/LAB-SETUP.ipynb) notebook to go through authentication and refreshing your azd environment.
+
+After completing the setup stage, you can get started with the rest of the workshop. 
+
+## Challenge 1 - Understanding agents and prompt engineering with Prompty
+
+### 1.1. What are AI agents?
+
+Contoso Creative Writer is an Agentic Application.
+
+**In artificial intelligence an agent is a program designed to:**
+
+-   Perceive its environment
+-   Make decisions
+-   Take actions to achieve specific goals
+
+For Contoso Creative Writer, the goal is to help the marketing team at
+Contoso Outdoors write well-researched, product-specific articles.
+
+Contoso Creative Writer is made up of 4 agents that help achieve this
+goal.
+
+![Agents in Contoso Creative Writer](./assets/crwriter-challenges/agents.png)
+
+### 1.2. How is an AI agent built?
+
+Each agent in Contoso Creative Writer is built with
+[Prompty](https://prompty.ai/)!
+
+Prompty is a new asset class and file format for LLM prompts that aims
+to provide observability, understandability, and portability for
+developers.
+
+**The Prompty file:**
+
+-   A Prompty file is not tied to any language as it uses the markdown
+    format with YAML
+
+-   The file contains two main parts:
+
+    -   **Front Mattter:**
+        -   This is the first part of the prompty file
+
+        -   It is written in YAML and is contained inside two `---`
+            seperators.
+
+        -   It includes basic details about the prompt, the model
+            configuration and prompty inputs.
+
+            ```yaml
+            ---
+            name: My Prompty File 
+            description: >-
+            This is a prompt about Prompty
+            authors:
+            - Seth Juarez
+            model:
+            api: chat
+            configuration: 
+                type: azure_openai
+                azure_deployment: gpt-35-turbo
+                api_version: 2024-05-13
+            sample:
+            instructions: Can you tell me more about Prompty?  
+            ---
+            ```
+
+    -   **Prompt Template:**
+        -   This is the base prompt that is sent to the LLM once the
+            prompty is executed.
+
+        -   It uses Jinja format to pass values either specified in the
+            front matter or from the application to the LLM.
+
+        -   Given *\'name\': Marlene*, the variable *{{name}}* will be
+            replaced by *Marlene* at runtime.
+
+            ```yaml
+
+            system:
+            You are a helfpul assistant that uses gpt-35-turbo to answer questions about Prompty. 
+            You provide helpful information and reply in a friendly tone
+
+            user:
+            {{instructions}}
+            ```
+
+**The VS Code extension tool:**
+
+-   The Prompty extension allows you to run Prompty files directly in VS
+    Code.
+-   It has been pre-installed for this workshop, but you can also find
+    it in the Visual Studio Code Marketplace.
+
+We\'ll look at how to use both of these to build and run an AI Agent
+next.
+
+### 1.3. Building an AI Agent
+
+To help us understand practically how we build an AI agent, we will
+build the **Researcher Agent** step by step.
+
+In order to build the Researcher agent you will complete the following 3 steps:</p>
+> -   **Step 1:** Build a multi-lingual query generator
+> -   **Step 2:** Understanding LLM function calling with Prompty
+> -   **Step 3:** Build the tools and execute the research
+
+Let\'s start with step 1.
+
+#### **Step 1: Build a multi-lingual query generator**
+
+The researcher agent generates queries that can be used to look for
+information online. It also allows us to find search
+results in multiple languages.
+
+Complete the following tasks\...
+**📃 Tasks for you to do:**
+
+> **TODO 1:** Open the
+> [researcher-0.prompty](researcher/researcher-0.prompty) file, read the
+> prompt and **click the play button** on the top right of the file.
 >
->If `<resource-group-name>` already exists, your user must have `Owner` permissions on the resource group.
->If `<resource-group-name>` does not exist exists, the deployment script will create it. In this case, your user must have `Owner` permissions on the subscription in which the resource group will be created.
-
-</div>
-
-> **NOTE**:
+> -   You will be prompted to sign into an account. **Choose your
+>     skillable email/username to sign in.**
 >
->By default, the deployment script will attempt to create new Azure Open AI model deployments for the `gpt-35-turbo` and `text-embedding-ada-002` models. If you already have deployments for these models, you can skip the deployment by passing the following parameters to the script:
+> -   Note: If you signed in with the wrong account by mistake sign out
+>     of that account in the profile section at the bottom right of the
+>     codespace and rerun the Prompty file.
 
->```pwsh
->-openAiName <open-ai-name> -openAiRg <open-ai-resource-group> -openAiCompletionsDeployment <completions-deployment-name> -openAiEmbeddingsDeployment <embeddings-deployment-name> -stepDeployOpenAi $false
+> **Observations 👀:**
+>
+> -   Observe the output in the terminal.
+> -   Look in the Prompty file, notice the following instructions in the
+>     **sample section**: `instructions: Can you
+>     generate queries to find the latest camping trends and what folks
+>     are doing in the winter? Use \'en-US\' as the market code.`
+
+
+> **TODO 2:** Edit the instructions to use a new language. (For example
+> use `es-ES` instead of `en-US`, to get the results back in Spanish)
+
+#### **Step 2: Understanding LLM function calling with Prompty**
+
+In order for the researcher to generate even better queries it needs to
+know which search functions are avaialble to it.
+
+-   Using the Prompty **tools** parameter an LLM can choose from
+    functions described in a json file.
+-   We can add information about which functions (sometimes called
+    tools), the LLM has access to in a **functions.json** file.
+-   Information from a json file is passed to prompty using the
+    `functions.json` format.
+
+In the case of the researcher we have a **functions.json** file with
+descriptions of 3 functions:
+
+-   find_information
+-   find_entities
+-   find_news
+
+Open `functions.json` and read the description of the **find_information** function.
+
+Its important to note that **Prompty files can also be executed using
+Python code.** To see how Prompty works with tools we will
+switch to using code instead of pressing play on the file.
+
+Complete the following tasks\...
+
+------------------------------------------------------------------------
+
+**Run the code:**
+
+> **📚 TODO 1:** Execute the researcher/researcher-2.prompty
+> ```python
+import prompty
+import prompty.azure
+import os
+>
+>instructions = "Can you find the best educational material for learning Python programming?"
+prompty.execute(os.getcwd() + "/researcher/researcher-2.prompty", inputs={"instructions": instructions})
 >```
->In case you will defer the Open AI deployment to the script, make sure have enough Tokens Per Minute (TPM) in thousands quota available in your subscription. By default, the script will attempt to set a value of 120K for each deployment. In case you need to change this value, you can edit lines 22 and 29 in the `code\VectorSearchAiAssistant\scripts\Deploy-OpenAi.ps1` file.
-
->If using your own Azure OpenAI account, it will be necessary to update the appsettings.json file in the `ChatServiceWebApi` project to use the model deployment names used in your existing Azure OpenAI account. See **Configure Local Settings section below** for more details.
-
-### Decide on the containerization approach
-
-The deployment script supports two types of containerization:
-
-- [Azure Kubernetes Service - AKS](https://azure.microsoft.com/services/kubernetes-service) - this option allows you to deploy the application into an AKS cluster. This option is more complex to set up, but it provides more flexibility and control over the deployment. To use AKS, pass the following parameter to the deployment script:
-  ```pwsh
-  -deployAks $true
-  ```
-- [Azure Container Apps - ACA](https://azure.microsoft.com/products/container-apps) - this option allows you to deploy containerized applications without having to manage the underlying infrastructure and thus is an easier option to get started with.
-
-For the purpose of this hackathon, you can whatever your preference is, either AKS or ACA.
-
->**NOTE**:
+> **Observations 👀:**
 >
->For the reminder of this hackathon, please interpret any documentation references to `AKS` as `ACA` if you chose to use Azure Container Apps (and vice-versa).
+> -   Observe the results. What do you see is different from the
+>     previous output?
+> -   Navigate to
+>     [researcher-2.prompty](researcher/researcher-2.prompty) and notice
+>     that *\${<file:functions.json>}* has been added to **tools** under
+>     the *parameters* section in the file.
+> -   What is the name of the tool called?
 
-### Verify initial deployment
+In the result from running the Prompty file we saw that the
+**find_information** function was selected.
 
-1. After the command completes, navigate to resource group and obtain the name of the AKS service.
-2. Execute the following command to obtain the website's endpoint:
+-   From its description in the
+    [functions.json](./researcher/functions.json) file can you
+    understand why it was chosen?
+-   Observe that it finds general information on the web.
+-   The LLM used the **instruction** we gave it and the **descriptions**
+    it saw in *functions.json* to pick which function to call.\
+-   It also figured out which parameter values should be passed to the
+    function.
 
-    For ACA:
+We can influence which function is called by being more specific about
+the instructions we give the LLM. This is a form of **Prompt
+Engineering**.
 
-    ```pwsh
-    az deployment group show -g <resource-group-name> -n cosmosdb-openai-azuredeploy -o json --query properties.outputs.webFqdn.value
-    ```
+Complete the following tasks\...
 
-    For AKS:
+------------------------------------------------------------------------
 
-    ```pwsh
-    az aks show -n <aks-name> -g <resource-group-name> -o tsv --query addonProfiles.httpApplicationRouting.config.HTTPApplicationRoutingZoneName
-    ```
 
-1. Browse to the website with the returned hostname.
+**Run the code:**
 
-If the website loads, you are ready to continue with the hackathon challenges. Don't worry if the website is not fully operational yet - you will get it there!
-
-## Service Architecture
-
-After the deployment is complete the following Azure services will be deployed.
-
-- Azure OpenAI Service
-- Azure Cosmos DB
-- Azure Cognitive Search
-- Azure Container Apps (or AKS)
-- Azure Storage
-- Azure Networking (*not pictured*)
-
-<p align="center">
-    <img src="assets/intro/architecture.png" width="100%" alt="global architecture>
-</p>
-
-## Run the solution locally using Visual Studio
-
-You can run the website and the REST API that supports it locally. You need to first update your local configuration and then you can run the solution in the debugger using Visual Studio.
-
-#### Configure local settings
-
-- In the `ChatServiceWebApi` project, review the content of the `appsettings.json` file.
-
->**NOTE**:
+> **TODO 2:** Get the LLM to use the **find_entities** function to help
+> us find people, places or things by running the cell below:
+> ``` python
+instructions = "Who is the person who invented the Python programming language?"
+prompty.execute(os.getcwd() + "/researcher/researcher-2.prompty", inputs={"instructions": instructions})
+> ```
+> **Observations 👀:**
 >
-> If you deploy using a pre-existing Azure OpenAI account. You will need to update `CompletionsDeployment` and `EmbeddingsDeployment` values to match the names used for these models in your Azure OpenAI account.
+> Note that the **find_entities** function was selected by the LLM based
+> on:
+>
+> 1.  **The description of the function** in
+>     [functions.json](./researcher/functions.json)
+> 2.  The **instructions** we passed to it.
 
-```json
+
+> **TODO 3:** Let\'s try to get the LLM to call the **find_news**
+> function by running the cell below:
+> ``` python
+instructions = "Find the latest news about Microsoft?"
+prompty.execute(os.getcwd() + "/researcher/researcher-2.prompty", inputs={"instructions": instructions})
+>```
+>
+> **🐞BUG ALERT:** A bug has purposefully been left in the functions.json file.
+>
+> Observations 👀:
+>
+> -   Which function call has been selected, if any?
+> -   Is this the function we want?
+> -   The find_news function has not been selected by the LLM.
+> -   Look in the functions.json file and see what\'s wrong.
+
+
+> **TODO 4:** Add the function description for find_news to the
+> functions.json file. (💡Click the play icon for the details.) Once
+> added rerun the cell above!
+> **find_news function description:** 
+> ``` json
 {
-    "Logging": {
-        "LogLevel": {
-            "Default": "Information",
-            "Microsoft.AspNetCore": "Warning",
-            "Microsoft.SemanticKernel": "Error"
+    "type": "function",
+    "function": {
+      "name": "find_news",
+      "description": "Finds news on the web given a query. This function uses the Bing Search API to find news on the web given a query. The response includes the most relevant news articles from the web and should be used if you're looking for news.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string",
+            "description": "An optimal search query to find news on the web using the Bing Search API"
+          },
+          "market": {
+            "type": "string",
+            "description": "The market to search in, e.g. en-US - it should match the language of the query"
+          }
         },
-        "ApplicationInsights": {
-            "LogLevel": {
-                "Default": "Information",
-                "Microsoft.AspNetCore": "Warning",
-                "Microsoft.SemanticKernel": "Error"
-            }
-        }
-    },
-    "AllowedHosts": "*",
-    "MSCosmosDBOpenAI": {
-        "CognitiveSearch": {
-            "IndexName": "vector-index",
-            "MaxVectorSearchResults": 10
-        },
-        "OpenAI": {
-            "CompletionsDeployment": "completions",
-            "CompletionsDeploymentMaxTokens": 8096,
-            "EmbeddingsDeployment": "embeddings",
-            "EmbeddingsDeploymentMaxTokens": 8191,
-            "ChatCompletionPromptName": "RetailAssistant.Default",
-            "ShortSummaryPromptName": "Summarizer.TwoWords",
-            "PromptOptimization": {
-                "CompletionsMinTokens": 50,
-                "CompletionsMaxTokens": 300,
-                "SystemMaxTokens": 1500,
-                "MemoryMinTokens": 1500,
-                "MemoryMaxTokens": 7000,
-                "MessagesMinTokens": 100,
-                "MessagesMaxTokens": 200
-            }
-        },
-        "CosmosDB": {
-            "Containers": "completions, customer, product",
-            "MonitoredContainers": "customer, product",
-            "Database": "database",
-            "ChangeFeedLeaseContainer": "leases"
-        },
-        "DurableSystemPrompt": {
-            "BlobStorageContainer": "system-prompt"
-        },
-        "CognitiveSearchMemorySource": {
-            "IndexName": "vector-index",
-            "ConfigBlobStorageContainer": "memory-source",
-            "ConfigFilePath": "ACSMemorySourceConfig.json"
-        },
-        "BlobStorageMemorySource": {
-            "ConfigBlobStorageContainer": "memory-source",
-            "ConfigFilePath": "BlobMemorySourceConfig.json"
-        }
+        "required": [
+          "query"
+        ]
+      }
     }
-}
+  }
+> ```
+
+
+#### **Step 3: Build the functions and execute the research**
+
+We saw that the researcher:
+
+-   Selects which function to call
+-   Generates a query to pass to the function
+-   Selects a market code to pass to the function.
+
+When we execute a Prompty file that has a **functions.json** file added
+to the **tools** parameter, the LLM returns a **list of Tool Calls**
+(also known as function calls) that look like this:
+
+``` python
+[ToolCall(id='call_JtomZ3gCGHEa5MBxy6M3vypv', name='find_entities', arguments='{"query":"inventor of Python programming language","market":"en-US"}')]
 ```
 
-  - In the `ChatServiceWebApi` project, create an `appsettings.Development.json` file with the following content (replace all `<...>` placeholders with the values from your deployment):
+But where are the functions it should be calling?
 
-```json
-{
-    "MSCosmosDBOpenAI": {
-        "CognitiveSearch": {
-            "Endpoint": "https://<...>.search.windows.net",
-            "Key": "<...>"
-        },
-        "OpenAI": {
-            "Endpoint": "https://<...>.openai.azure.com/",
-            "Key": "<...>"
-        },
-        "CosmosDB": {
-            "Endpoint": "https://<...>.documents.azure.com:443/",
-            "Key": "<...>"
-        },
-        "DurableSystemPrompt": {
-            "BlobStorageConnection": "<...>"
-        },
-        "BlobStorageMemorySource": {
-            "ConfigBlobStorageConnection": "<...>"
-        },
-        "CognitiveSearchMemorySource": {
-            "Endpoint": "https://<...>.search.windows.net",
-            "Key": "<...>",
-            "ConfigBlobStorageConnection": "<...>"
-        }
-    }
-}
-```
+-   The Python code for the functions described in *functions.json* can
+    be found in the [researcher3.py](researcher/researcher3.py) file.
+-   These functions will pass the query and market code to the Bing
+    Search API.
+-   Open the [researcher3.py](researcher/researcher3.py) file and try
+    and find the **find_information, find_news, find_entities**
+    functions.
 
-> **NOTE**: THe `BlobStorageConnection` value can be found in the Azure Portal by navigating to the Storage Account created by the deployment (the one that has a container named `system-prompt`) and selecting the `Access keys` blade. The value is the `Connection string` for the `key1` key.
+To put everything together the **research** function in
+[researcher3.py](researcher/researcher3.py) calls:
 
-### Running in debug
+-   an **execute_researcher_prompty** function that has the code we saw
+    earlier to execute the prompty file
+-   an **execute_function_calls** function that runs code to execute all
+    the functions calls
 
-To run locally and debug using Visual Studio, open the solution file to load the projects and prepare for debugging.
+Complete the final task\...
 
-Before you can start debugging, you need to set the startup projects. To do this, right-click on the solution in the Solution Explorer and select `Set Startup Projects...`. In the dialog that opens, select `Multiple startup projects` and set the `Action` for the `ChatServiceWebApi` and `Search` projects to `Start`.
+------------------------------------------------------------------------
 
-Also, make sure the newly created `appsettings.Development.json` file is copied to the output directory. To do this, right-click on the file in the Solution Explorer and select `Properties`. In the properties window, set the `Copy to Output Directory` property to `Copy always`..
+**Run the code:**
 
-You are now ready to start debugging the solution locally. To do this, press `F5` or select `Debug > Start Debugging` from the menu.
+> **TODO:** Run the cell below to run the full researcher agent!
+>
+> -   Try different instructions and see which results you get and which
+>     function is called.
+> ```python
+import sys
+import os
+>
+> # Add the path to sys.path
+sys.path.append(os.path.abspath('../../docs/workshop/researcher'))
+>
+> from researcher3 import execute_researcher_prompty, execute_function_calls
+>
+> instructions = "Can you find the best educational material for learning Python programming"
+>
+> # Execute the researcher prompty to get a list of functions calls
+function_calls = execute_researcher_prompty(instructions=instructions)
+>
+> # Execute the function calls
+research = execute_function_calls(function_calls)
+research
+>```
 
-**NOTE**: With Visual Studio, you can also use alternate ways to manage the secrets and configuration. For example, you can use the `Manage User Secrets` option from the context menu of the `ChatWebServiceApi` project to open the `secrets.json` file and add the configuration values there.
+**Step 3 Complete ✅**
 
----
+#### Congratulations you\'ve succesfully built your first AI Agent with Prompty🎉
 
-# Challenge 1: The Landing Before the Launch
+-   \[✅\] Step 1: Build a multi-lingual query generator
+-   \[✅\] Step 2: Understanding LLM function calling with Prompty
+-   \[✅\] Step 3: Build the tools and execute the research
 
-CosmicWorks has big plans for their retail site, but they need to start somewhere; they need a landing zone in Azure for all of their services. It will take a while to prepare their e-Commerce site to migrate to Azure, but they're eager to launch a POC of a simple chat interface where users can interact with a virtual agent to find product and account information.
+We can now succesfully move on to learning outcome 2
 
-They've created a simple Blazor web application for the UI elements and have asked you to to incorporate the backend plumbing to do the following:
+## Challenge 2 - Utilizing Prompty tracing for debugging and observability
 
-- Store the chat history in an Azure Cosmos DB database
-  - They expect the following types of messages: Session (for the chat session), Message (the user and assistant message).
-  - A message should have a sender (Assistant or User), tokens (that indicates how many tokens were used), text (the text from the assistant or the user), rating (thumbs up or down) and vector (the vector embedding of the user's text).
-- Source the customer and product data from the Azure Comos DB database.
-- Use Azure OpenAI service to create vector embeddings and chat completions.
-- Use a Azure Cognitive Search to search for relevant product and account information by the vector embeddings.
-- Encapsulate the orchestration of interactions with OpenAI behind a back-end web service.
-- Create a storage account to externalize prompts that will be used by your assistant.
+🚨**Double click on the notebook tab** above to keep the notebook open! 
 
-For this challenge, you will deploy the services into the landing zone in preparation for the launch of the POC.
+When running Applications driven by LLMs, sometimes things don't go as expected! 
+<br>It's important to have a way to debug your LLM workflow so you can see where things are working. 
+<br>Tracing helps you visualize the execution of your prompts and clearly see what inputs are being passed to the LLM. 
 
-## Challenge
+To illustrate how to use local tracing in prompty let's build and debug a custom agent!
 
-Your team must:
+### 2.1 Run and debug a custom social media agent
 
-1. Clone the Starter repo with the Blazor web application and starter artifacts
-2. Set up your development environment
-3. Deploy the Azure services needed to support the chat interface
+<img src="./assets/crwriter-challenges/socialmediaagent.png" alt="social media agent" width="600" height="350">
 
-<div class="tip" data-title="Hints">
+### What is the social media agent? 
 
-> - CosmicWorks has provided you a script to deploy the foundation of your Azure environment. See the instructions in the README.md of the repo.
-> - You will need to deploy the following Azure services within a new Resource Group:
->  - Azure Cosmos DB
->  - Azure OpenAI service
->  - Azure Cognitive Search
->  - Azure Container Apps service that will host:
->    - A web service that supports running the front-end Blazor web app in a Docker container
->    - A web service that supports running the back-end web API in a Docker container
->  - Azure Storage Account (not enabled for hierarchical namespace)
->- You will load data and deploy code into these services in a later challenge.
+Today marketing departments not only need to write catchy blogs but they should also be able to promote the blogs and grow an audience on social media! 
+<br> We will be building a social media agent that can help us generate twitter threads! 
 
-</div>
+You should see a `./socialmedia/social.prompty` folder in the workshop folder. This folder contains:
 
-### Success Criteria
+- a **social.py file:** Uses the **execute_social_media_writer_prompty** and **run_social_media_agent** functions to send the inputs and prompts to the LLM. <br>It also imports the research function from the researcher agent to let it access information from online.  
+- a **social.prompty file:** This contains the base prompt for the social media agent. 
+<br>It has been instructed to generate a thread of **4 tweets**.
 
-To complete this challenge successfully, you must:
 
-- Deploy Azure Cosmos DB with the NoSQL API. It should have a database named `database` and containers named `completions` with a partition key of `/sessionId`, `customer` with a partition key of `/customerId`, `embedding` with a partition key of `/id`, `product` with a partition key of `/categoryId`, and `leases` with a partition key of `/id`. You only need to deploy the account to a single region. Make a best guess at the RU/s for each container. You will adjust these in a later challenge based on performance and cost.
-- Deploy Azure OpenAI with the following deployments:
-  - `completions` with the `gpt-35-turbo` model
-  - `embeddings` with the `text-embedding-ada-002` model
-- Deploy Azure Cognitive Search in the basic tier.
-- Deploy Azure Container Apps, Azure Container Registry and Azure Storage Account.
+> Steps to build and debug the social media agent:
+>
+> **Step 1:** Run the code for social media agent<br>
+> **Step 2:** Use Prompty tracing to identify and fix the bug
 
-### Resources
+Let's get started by testing out the agent!
 
-- [Azure Cosmos DB](https://learn.microsoft.com/azure/cosmos-db/)
-- [Azure OpenAI service](https://learn.microsoft.com/azure/cognitive-services/openai/overview)
-- [Azure Cognitive Search](https://learn.microsoft.com/azure/search/)
-- [Azure Container Apps](https://learn.microsoft.com/azure/container-apps/start)
+#### **Step 1: Run the code for social media agent**
+The social media agent is a great way to generate twitter threads that are **4 tweets** long.  
 
-## Explore Further
-
-- [Understanding embeddings](https://learn.microsoft.com/azure/cognitive-services/openai/concepts/understand-embeddings)
+Complete the following task. 
 
 ---
+**Tasks for you to do:**
+> **TODO:** Run the following code into your jupyter notebook.
+>```python
+import sys
+import os
+>
+># Add the path to sys.path
+sys.path.append(os.path.abspath('../../docs/workshop/socialmedia'))
+>
+>from social import run_social_media_agent
+>
+>research_instructions = "Find information about AI Agents"
+social_media_instructions = "Write a fun and engaging twitter thread about AI Agents given the research."
+>
+>run_social_media_agent(instructions=research_instructions, social_media_instructions = social_media_instructions)
+>```
+>
+> **🐞BUG ALERT:** A bug has been purposefully left in the prompty file. We will use tracing to quickly spot the bug and fix it!
+>
+> **Observations 👀:**
+>   - What do you observe that is strange from the results?
+>   - Remember you should see 4 tweets in a twitter thread. Is this what is being returned?
+>   - Try to think what could be causing the bug? 
+
+**Step 1 Complete ✅**
+
+#### **Step 2: Use Prompty tracing to identify and fix the bug**
+We will use Prompty's built in tracing to identify the bug. 
+
+Complete the following task... 
+
+> **TODO 1:** To see the trace generated by Prompty open the **workshop** folder in the file explorer and look for a **.runs** folder in it. 
+> Select this folder and click the **execute_social_media_writer_prompty.tracy** file at the top of the folder. 
+> **Observations 👀:**
+>   - This page shows you information that prompty has sent to or recieved from the LLM. 
+>   - In this specific case look at the *Completion Tokens* amount. 
+>   - This shows less than a 1000 tokens, which is not enough for us to generate a twitter thread. 
+
+> **TODO 2:** To fix this bug go to the `socialmedia/social.prompty` file and edit the *max_tokens* amount to make it 1500. 
+> Rerun the code in the cell above and confirm the full thread is generated!
+
+**Step 2 Complete ✅**
+
+Congratulations you've succesfully used Prompty tracing for debugging🎉
+- [✅] Step 1: Run the code for social media agent
+- [✅] Step 2: Use Prompty Tracing to identify and fix the bug
+
+**⭐Bonus⭐:** If you have time at the end of the workshop come back and edit the social media agent prompt to generate content for another site like LinkedIn. 
+
+Now that we have a good understanding of how to build and debug agents with Prompty let's run Contoso Creative Writer, a multi-agent solution! 
+
+## Challenge 3 - Building and running Contoso Creative Writer
+
+## Challenge 4 - Setting up automated evaluations with GitHub Actions
 
-# Challenge 2: It's All About the Payload
 
-CosmicWorks has years of product, customer, and sales data that they exported to an Azure storage account. They want to load this data into the Azure Cosmos DB account for a future migration of their e-Commerce site to Azure, but also for the POC of the chat interface. They also want to load the data into Azure Cognitive Search so that they can search for product and account information by the vector embeddings.
-
-One critical component of the magic that makes the CosmicWorks chat interface work is the ability to search for products and accounts by their vector embeddings. When a user types a question into the chat interface, we need to create a vector embedding for the question, then search for the most similar vector embeddings of products and accounts, and then return those similar documents. The vector embeddings for products and accounts are stored in a vector database, allowing us to return relevant context documents that get sent to Azure OpenAI's completions endpoint.
-
-CosmicWorks has done some research, and they would like to use Microsoft Semantic Kernel as the framework the code uses to orchestrate calls to the Azure OpenAI embeddings and completions endpoints. They've provided some incomplete starter code to give you an idea of what they are looking for.
-
-## Challenge
-
-Your team must:
-
-1. Implement an efficient and repeatable way to load product and customer data from the storage account into Cosmos DB. For this exercise, you only need to load the data once, but CosmicWorks wants to be able to repeat the process in the future with new data. Cosmicworks has provided the data for you to start with, listed in the resources below.
-2. Create a vector index in Azure Cognitive Search. They had some ideas on this that they provided in the starter project.
-3. Create a process to index product and customer data from Cosmos DB using the change feed to load the documents into an Azure Cognitive Search vector index. They have provided a starter template for you that they had created for another effort.
-4. Verify that the data was loaded into Cosmos DB and Cognitive Search.
-
-<div class="tip" data-title="Hints">
-
-> - CosmicWorks suggest using the Azure Cosmos DB Desktop Data Migration Tool to load their sample files from their Azure Storage into your instance of Cosmos DB. They suggest you do a "Quick Install" of the tool. They have provided the `migrationsettings.template.json` in the root of the starter repo that contains the parameters you should use with this tool. You need to replace the `{{cosmosConnectionString}}` instances in the JSON file with the connection string to your deployed instance of Cosmos DB.
-> - Search thru the solution for the `TODO: Challenge 2` comments and follow the instructions provided.
-> - Think about how you can use the Cosmos DB Change Feed to trigger the creation of vector embeddings for new/updated products and customers.
-> - Think about how you build the logic for accessing the Azure OpenAI service to perform the vector embeddings of the product and customer documents. You will use this same logic layer to perform other Azure OpenAI tasks in later challenges.
-
-</div>
-
-### Success Criteria
-
-To complete this challenge successfully, you must:
-
-- Demonstrate to your coach that you can load the data from the storage account into Cosmos DB using a method that can be repeated in the future.
-- Perform a document count on each container in Cosmos DB and verify that the counts match the number of documents in the storage account.
-- Generate vector embeddings of a sufficiently high dimensionality that is supported by the Azure OpenAI service as well as your vector database.
-- Encapsulate the embedding logic within a service layer that can be used by other components of the CosmicWorks chat interface, as well as a future REST API service.
-- Create a process that automatically generates vector embeddings for all of the products and customers in the Cosmos DB database and stores them in the vector database.
-- Demonstrate to your coach a successful search for products and customers by vector embeddings. This does not necessarily have to originate from the chat interface at this point.
-
-### Resources
-
-- [Sample Customer Data](https://cosmosdbcosmicworks.blob.core.windows.net/cosmic-works-small/customer.json)
-- [Sample Product Data](https://cosmosdbcosmicworks.blob.core.windows.net/cosmic-works-small/product.json)
-- [Azure Cosmos DB Desktop Data Migration Tool](https://github.com/AzureCosmosDB/data-migration-desktop-tool)
-- [Query Azure Search using Search Explorer](https://learn.microsoft.com/azure/search/search-explorer)
-- [Work with data using Azure Cosmos DB Explorer](https://learn.microsoft.com/en-us/azure/cosmos-db/data-explorer)
-
-## Explore Further
-
-- [Understanding embeddings](https://learn.microsoft.com/azure/cognitive-services/openai/concepts/understand-embeddings)
-- [Semantic Kernel](https://learn.microsoft.com/semantic-kernel/overview/)
-
----
-
-# Challenge 3: Now We're Flying
-
-With the critical components in place, we're ready to tie everything into the chat interface. When a user types a question into the chat interface, we need to create a vector embedding for the question, then search for the most similar vector embeddings for products and accounts, and return the relevant documents that get sent to Azure OpenAI's completions endpoint.
-
-In order to return a human-friendly response to the user, we need to use the completions endpoint to generate a response based on the most relevant documents and an instructional system-level prompt. Furthermore, we need to keep a history of the user's questions and the responses that were generated so that they can reload the chat in the future.
-
-To generate prompts for the Azure OpenAI service, the approach is to use a technique called *prompt engineering* to author prompts that are used to guide the generation of completions. Prompt engineering is an iterative process that involves authoring prompts, generating completions, and evaluating the results.
-
-The starter solution uses Semantic Kernel to orchestrate the execution of prompts. This challenge is about experimenting with system prompts to impact how the completions work.
-
-## Challenge
-
-Your team must:
-
-1. Use the Azure OpenAI service to create vector embeddings for the user prompt that is entered into the chat interface. Invoke the completions endpoint to generate a response based on the most relevant documents and some instructional system-level prompts. The system prompt should be included with every completions call, but not repeated in the chat history. Use Semantic Kernel as they stubbed out in the project to make this call.
-2. Create the system prompt that defines the assistant's behavior. CosmicWorks has provided you with a starter prompt located under VectorSearchAiAssistant\SystemPrompts\RetailAssistant\Default.txt. You should add to the content in this file. The system prompt should instruct the model to do the following:
-   1. Tell it that it is an intelligent assistant for a bike company.
-   2. Tell it that it is responding to user questions about products, product categories, customers, and sales order information provided in JSON format embedded below.
-   3. Only answer questions related to the information provided.
-   4. Not to "make up" information and to respond that it does not know the answer to suggest to the user to search for it themselves.
-   5. Make sure the prompt ends with "Text of relevant information:" as after that the system will inject context data and chat history.
-3. Upload the system prompt file you created at the previous step to the Azure Storage Account, place it under the path `system-prompt / RetailAssistant` overwriting the file that is there.
-4. Store the user's questions and the responses that were generated so the system can reload them in the future.
-
-<div class="tip" data-title="Hints">
-
-> - CosmicWorks has provided starter code for you. Search for the two methods with `TODO: Challenge 3` and complete them as instructed.
-> - Think carefully about the system prompt, about how it should respond, what knowledge it is allowed to use when reasoning to create a response, what subjects it is allowed to respond to and importantly what it should not respond to.
-> - Have the agent reject off topic prompts from the user (such as asks to tell a joke).
-
-</div>
-
-### Success Criteria
-
-To complete this challenge successfully, you must:
-
-- Demonstrate to your coach that you can load the system prompt from the storage account.
-- Interact with the assistant thru the web based chat interface.
-- View the chat messages saved to the container in Cosmos DB and verify that your new User and Assistant messages are appearing.
-- Try a variety of user prompts to see how the assistant responds.
-
-### Resources
-
-- [Intro to prompt engineering](https://learn.microsoft.com/en-us/azure/cognitive-services/openai/concepts/prompt-engineering)
-
-## Explore Further
-
-- [Writing Effective System Prompts](https://learn.microsoft.com/azure/cognitive-services/openai/concepts/system-message)
-
----
-
-# Challenge 4: What's Your Vector, Victor?
-
-Now it's time to see the end-to-end process in action. In this challenge, you will load new data using the data loading mechanism you created in a previous challenge, then observe the automatic vectorization in action. Once you ingest the new data, ask a question through the prompt interface and see if it returns an answer about the new data you loaded.
-
-## Challenge
-
-Your team must:
-
-1. Load new data using the data loading mechanism you created in a previous challenge.
-2. Ask a question through the prompt interface and see if it returns an answer about the new data you loaded.
-
-<div class="tip" data-title="Hints">
-
-> - Cosmicworks has provided the JSON files containing the initial products and customers that you loaded into the system, take one of these and modify it to create some new products or customers and uploaded it to the storage account from where you loaded the initial data and run your data loading process.
-> - Experiment using prompts to elicit different response formats from the completions model:
->   - Respond with a single number or with one or two words
->   - Respond with a bulleted lists or formatted a certain way
->   - Respond using simpler syntax (e.g. explain it like I'm five)
->   - Challenge the model with prompts that require reasoning or chain of thought. For example, ask it to calculate aggregates on the data or go further and give some word problems like those you had in school.
->   - Challenge the model to explain its reasoning
->   - Request that the model list its sources
-
-</div>
-
-### Success Criteria
-
-To complete this challenge successfully, you must:
-
-- Show your coach the new data that you created and then your chat history showing how it responded using the new data as context.
-- Try to locate the new product or customer data you loaded in the Cognitive Search Index and in Cosmos DB.
-
-### Resources
-
-- [Query Azure Search using Search Explorer](https://learn.microsoft.com/azure/search/search-explorer)
-- [Work with data using Azure Cosmos DB Explorer](https://learn.microsoft.com/en-us/azure/cosmos-db/data-explorer)
-
-## Explore Further
-
-- [Prompt engineering techniques](https://learn.microsoft.com/azure/cognitive-services/openai/concepts/advanced-prompt-engineering?pivots=programming-language-chat-completions)
-
----
-
-# Challenge 5: It's All About the Payload, The Sequel
-
-What you've built so far is a pattern you can use with any type of data. You've built a process that can be used to load data from a storage account into Cosmos DB and then run a process that stores both documents and vector embeddings in Azure Cognitive Search. Now it's time to test your pattern by loading a completely new type of data.
-
-The solution provided by Cosmicworks is specific to Product, Customer and SalesOrder data. In this challenge you will extend the solution so that it can handle any type of data in the JSON format.
-
-## Challenge
-
-Your team must:
-
-1. Create a container named `sourcedata` in Cosmos DB.
-2. Create a new entity for the JSON document data type in the starter project.
-3. Create a new change feed processor that monitors the `sourcedata` container and works with instances of your new data type.
-4. Load data of the new type into Cosmos DB.
-5. Use the chat interface to ask questions about the new data type.
-
-<div class="tip" data-title="Hints">
-
-> - With the starter solution supplied by CosmicWorks open in Visual Studio, expand the VectorSearchAiAssistant.Service project, Models, Search and take a look at Product.cs. This class is required to process the data with the Cosmos DB change feed and is also used as the schema for the document added to the Cognitive Search index. You will need to define an entity similar to this for your new type of data.
-> - Extend the implementation of the `ModelRegistry` class to include your newly created data type.
-> - Review the implementation of the change feed processor located in the same project under Services, CosmosDbService.cs to validate it is ready to use your new data type.
-> - In SemanticKernelRAGService.cs update the setup of the `_memoryTypes` in the SemanticKernelRAGService constructor to include your new type that will be used to initialize the Search index.
-
-</div>
-
-### Success Criteria
-
-To complete this challenge successfully, you must:
-
-- Show your coach the new data that you created and then your chat history showing how it responded using the new data as context.
-- Try to locate the new product or customer data you loaded in the Cognitive Search Index and in Cosmos DB.
-
-### Resources
-
-- [Change feed processor in Azure Cosmos DB](https://learn.microsoft.com/en-us/azure/cosmos-db/nosql/change-feed-processor?tabs=dotnet)
-
-## Explore Further
-
-- [Reading from the change feed](https://learn.microsoft.com/en-us/azure/cosmos-db/nosql/read-change-feed)
-
----
-
-# Challenge 6: The Colonel Needs a Promotion
-
-In this challenge, you and your team will add a new capability by creating a couple of new plugins for Semantic Kernel.
-
-You have lately become a big fan of Shakespeare's sonnets. You love how they convey details and information, and you want your copilot to provide details about your company's policies in the poetic form of Shakespearean language.
-
-Your challenge is correctly handling requests about your company's policies (return or shipping), including when users ask to get them as poems written in Shakespearean style.
-
-## Challenge
-
-Your team must:
-
-1. Create a new Semantic Kernel plugin that will retrieve only memories related to company policies.
-2. Create a new Semantic Kernel plugin that will present any information as a poem written in Shakespearean language.
-3. Register the plugins with Semantic Kernel.
-4. Create a plan to respond to requests.
-5. Replace the logic in the SemanticKernalRAGService.cs GetResponse method with one that will first make a plan to decide if your functions should be used or not, and then execute the completion request accordingly.
-
-<div class="tip" data-title="Hints">
-
-> - You might want to try building this first in a simple console project.
-> - You should use the SequentialPlanner from Semantic Kernel to create and execute a plan around the prompt, so that it can choose when to invoke your plugins.
-> - You will have to update how you handle the completion response from the SequentialPlanner.
-
-</div>
-
-### Success Criteria
-
-To complete this challenge successfully, you must:
-
-- Show your coach an example chat where your new plugins where selected by the plan and executed to produce the completion.
-
-### Resources
-
-- [Semantic Kernel auto create plans with planner](https://learn.microsoft.com/semantic-kernel/ai-orchestration/planner?tabs=Csharp)
-- [Semantic Kernel creating native functions](https://learn.microsoft.com/en-us/semantic-kernel/ai-orchestration/native-functions?tabs=Csharp)
-
-## Explore Further
-
-[Microsoft Semantic Kernel on Github](https://github.com/microsoft/semantic-kernel)
-
----
-
-# Challenge 7: Getting Into the Flow
-
-Up until now, you have used a web service (ChatServiceWebAPI) that utilizes an instance of the ChatService singleton to  orchestrate calls to Azure OpenAI and Azure Cognitive Search by using Semantic Kernel. This effectively provides the "smarts" to your AI assistant. This is not the only way that you could build these smarts.
-
-In this challenge, you and your team will use Azure ML Prompt Flow to replace portions of the ChatService singleton.
-
-## Challenge
-
-Your team must:
-
-1. Create an Azure Machine Learning Prompt Flow that re-creates the core steps of the ChatService, which are:
-    - Get user query vector embedding
-    - Search for context data
-    - Request the completion
-    - Store and return the result
-
-<div class="tip" data-title="Hints">
-
-> - For all interactions with Azure OpenAI, you will want to use the LLM Tool in Prompt Flow.
-> - To search for context data from Cognitive Search you will want the Vector DB Lookup Tool.
-> - For storing the results back to Cosmos DB, consider using the Python Tool.
-
-</div>
-
-### Success Criteria
-
-To complete this challenge successfully, you must:
-
-- Demonstrate to your coach the PromptFlow you created in Azure Machine Learning.
-- Deploy your Prompt Flow endpoint and integrate that into the solution.
-
-### Resources
-
-- [Get stated with Prompt Flow](https://learn.microsoft.com/en-us/azure/machine-learning/prompt-flow/get-started-prompt-flow?view=azureml-api-2#create-and-develop-your-prompt-flow)
-- [Integrate LangChain in PromptFlow](https://learn.microsoft.com/en-us/azure/machine-learning/prompt-flow/how-to-integrate-with-langchain?view=azureml-api-2)
-- [Deploy a flow as a managed online endpoint for real-time inference](https://learn.microsoft.com/en-us/azure/machine-learning/prompt-flow/how-to-deploy-for-real-time-inference?view=azureml-api-2)
-
-## Explore Further
-
-[The Prompt Flow GitHub repository](https://github.com/microsoft/promptflow)
-
-# Teardown
-
-When you have finished with the hackathon, simply delete the resource group that was created.
