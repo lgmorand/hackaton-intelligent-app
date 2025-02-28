@@ -10,6 +10,8 @@ navigation_levels: 3
 authors: # Required. You can add as many authors as needed
   - Fethi DILMI
   - Louis-Guillaume MORAND
+  - Fethi DILMI
+  - Louis-Guillaume MORAND
 contacts: # Required. Must match the number of authors
   - "@fethidilmi"
   - "@lgmorand"
@@ -24,6 +26,10 @@ tags: azure, azure openai, azure bing web, azure cognitive search, cosmosdb, azu
 
 Welcome to this hands-on lab where you are going to play with Azure and create your own multi-task assistant. Please read **carefully** any line of this lab as it will guide you to success.
 
+## Introduction
+
+Welcome to this hands-on lab where you are going to play with Azure and create your own multi-task assistant. Please read **carefully** any line of this lab as it will guide you to success.
+
 ## Pre-requisites
 
 Before starting this lab, be sure to set your Azure environment :
@@ -33,6 +39,8 @@ Before starting this lab, be sure to set your Azure environment :
 To be able to do the lab content you will also need:
 
 - Basic understanding of Azure resources.
+- A [Github](https://www.github.com) account (Free, Team or Enterprise)
+- Create a [fork](https://github.com/Azure-Samples/contoso-creative-writer/fork) of the repository from the **main** branch to help you keep track of your potential changes
 - A [Github](https://www.github.com) account (Free, Team or Enterprise)
 - Create a [fork](https://github.com/Azure-Samples/contoso-creative-writer/fork) of the repository from the **main** branch to help you keep track of your potential changes
 
@@ -77,7 +85,9 @@ This project follows below responsible AI guidelines and best practices, please 
 ## Overview
 
 Contoso Creative Writer is an app that will help you write well researched, product specific articles. Once launched, enter the required information and then click "Start Work". To watch the steps in the agent workflow select the debug button in the bottom right corner of the screen. The result will begin writing once the agents complete the tasks to write the article.
+Contoso Creative Writer is an app that will help you write well researched, product specific articles. Once launched, enter the required information and then click "Start Work". To watch the steps in the agent workflow select the debug button in the bottom right corner of the screen. The result will begin writing once the agents complete the tasks to write the article.
 
+This application demonstrates how to create and work with AI agents driven by [Azure OpenAI](https://learn.microsoft.com/en-us/azure/ai-services/openai/). It includes a FastAPI app that takes a topic and instruction from a user and then calls a research agent that uses the [Bing Search API](https://www.microsoft.com/en-us/bing/apis/bing-web-search-api) to research the topic, a product agent that uses [Azure AI Search](https://azure.microsoft.com/en-gb/products/ai-services/ai-search) to do a semantic similarity search for related products from a vector store, a writer agent to combine the research and product information into a helpful article, and an editor agent to refine the article that's finally presented to the user. You are going to build and run this application.
 This application demonstrates how to create and work with AI agents driven by [Azure OpenAI](https://learn.microsoft.com/en-us/azure/ai-services/openai/). It includes a FastAPI app that takes a topic and instruction from a user and then calls a research agent that uses the [Bing Search API](https://www.microsoft.com/en-us/bing/apis/bing-web-search-api) to research the topic, a product agent that uses [Azure AI Search](https://azure.microsoft.com/en-gb/products/ai-services/ai-search) to do a semantic similarity search for related products from a vector store, a writer agent to combine the research and product information into a helpful article, and an editor agent to refine the article that's finally presented to the user. You are going to build and run this application.
 
 ![App preview](./assets/crwriter-deployment/app_preview.png)
@@ -113,6 +123,7 @@ This project template provides the following features:
 You have a few options for setting up this project.
 The easiest way to get started is GitHub Codespaces, since it will setup all the tools for you, but you can also [set it up locally](#local-environment).
 
+### GitHub Codespaces (preferred option)
 ### GitHub Codespaces (preferred option)
 
 1. You can run this template virtually by using GitHub Codespaces. The button will open a web-based VS Code instance in your browser (be sure to have [forked](https://github.com/Azure-Samples/contoso-creative-writer/fork) the repository first):
@@ -161,6 +172,7 @@ A related option is VS Code Dev Containers, which will open the project in your 
 2. Open the project:
    
     [![Open in Dev Containers](https://img.shields.io/static/v1?style=for-the-badge&label=Dev%20Containers&message=Open&color=blue&logo=visualstudiocode)](https://vscode.dev/redirect?url=vscode://ms-vscode-remote.remote-containers/cloneInVolume?url=https://github.com/Azure-Samples/contoso-creative-writer.git)
+    [![Open in Dev Containers](https://img.shields.io/static/v1?style=for-the-badge&label=Dev%20Containers&message=Open&color=blue&logo=visualstudiocode)](https://vscode.dev/redirect?url=vscode://ms-vscode-remote.remote-containers/cloneInVolume?url=https://github.com/Azure-Samples/contoso-creative-writer.git)
 
 3. In the VS Code window that opens, once the project files show up (this may take several minutes), open a terminal window.
 
@@ -189,6 +201,7 @@ A related option is VS Code Dev Containers, which will open the project in your 
 1. Create a new folder and switch to it in the terminal, then run this command to download the project code:
 
     ```shell
+    azd init -t contoso-creative-writer
     azd init -t contoso-creative-writer
     ```
     Note that this command will initialize a git repository, so you do not need to clone this repository.
