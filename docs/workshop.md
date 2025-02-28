@@ -20,11 +20,6 @@ tags: azure, azure openai, azure bing web, azure cognitive search, cosmosdb, azu
 
 # Build a multi-tasking assistant with Azure OpenAI
 
-<div class="Warning" data-title="Warning">
-
-> This section is to be reviewed after consolidation
-</div>
-
 ## Pre-requisites
 
 Before starting this lab, be sure to set your Azure environment :
@@ -79,29 +74,7 @@ This project follows below responsible AI guidelines and best practices, please 
 
 ---
 
-# Lab 1 - Play with Azure Container Apps
-
-> TO BE COMPLETED
-
-<!-- ******************************************************************************************************* -->
-<!-- ******************************************************************************************************* -->
-<!-- ******************************************************************************************************* -->
-<!-- ******************************************************************************************************* -->
-
----
-
-# Lab 2 - Topic to be defined
-
-> TO BE COMPLETED (I think we could may be skip this one)
-
-<!-- ******************************************************************************************************* -->
-<!-- ******************************************************************************************************* -->
-<!-- ******************************************************************************************************* -->
-<!-- ******************************************************************************************************* -->
-
----
-
-# Lab 3 - Deploy a Creative Writing Assistant
+# Lab 1 - Deploy a Creative Writing Assistant
 
 ## Overview
 
@@ -259,103 +232,6 @@ Once you've opened the project in [Codespaces](#github-codespaces), [Dev Contain
    You should respond with `N`, as this is not a necessary step, and takes some time to set up. 
 
 
-## Testing the sample
-
-This sample repository contains an agents folder that includes subfolders for each agent. Each agent folder contains a prompty file where the agent's prompty is defined and a python file with the code used to run it. Exploring these files will help you understand what each agent is doing. The agent's folder also contains an `orchestrator.py` file that can be used to run the entire flow and to create an article. When you ran `azd up` a catalogue of products was uploaded to the Azure AI Search vector store and index name `contoso-products` was created. 
-
-To test the sample: 
-
-1. Run the example web app locally using a FastAPI server. 
-
-    First navigate to the src/api folder 
-    ```shell
-    cd ./src/api
-    ```
-
-    Run the FastAPI webserver
-    ```shell
-    fastapi dev main.py
-    ```
-    
-    **Important Note**: If you are running in Codespaces, you will need to change the visibility of the API's 8000 and 5173 ports to `public` in your VS Code terminal's `PORTS` tab. The ports tab should look like this:
-
-    ![Screenshot showing setting port-visibility](./assets/crwriter-deployment/ports-resized.png)
-
-
-    If you open the server link in a browser, you will see a URL not found error, this is because we haven't created a home url route in FastAPI. We have instead created a `/get_article` route which is used to pass context and instructions directly to the get_article.py file which runs the agent workflow.
-
-   (Optional) We have created a web interface which we will run next, but you can test the API is working as expected by running this in the browser:
-    ```
-    http://127.0.0.1:8080/get_article?context=Write an article about camping in alaska&instructions=find specifics about what type of gear they would need and explain in detail
-    ```
-
-3. Once the FastAPI server is running you can now run the web app. To do this open a new terminal window and navigate to the web folder using this command:
-    ```shell
-    cd ./src/web
-    ```
-    
-    First install node packages:
-    ```shell
-    npm install
-    ```
-
-    Then run the web app with a local dev web server:
-    ```shell
-    npm run dev
-    ```
-
-    This will launch the app, where you can use example context and instructions to get started. 
-    On the 'Creative Team' page you can examine the output of each agent by clicking on it. The app should look like this:
-
-    Change the instructions and context to create an article of your choice. 
-
-4. For debugging purposes you may want to test in Python using the orchestrator Logic
-
-    To run the sample using just the orchestrator logic use the following command:
-
-    ```shell
-    cd ./src/api
-    python -m orchestrator
-
-    ```
-
-## Tracing
-
-To activate the Prompty tracing server:
-
-```
-export LOCAL_TRACING=true
-```
-
-Then start the orchestrator:
-
-```
-cd ./src/api
-python -m orchestrator
-```
-
-Once you can see the article has been generated, a `.runs` folder should appear in the `./src/api` . Select this folder and click the `.tracy` file in it. 
-This shows you all the Python functions that were called in order to generate the article. Explore each section and see what helpful information you can find.
-
-## Evaluating results
-
-Contoso Creative Writer uses evaluators to assess application response quality. The 4 metrics the evaluators in this project assess are Coherence, Fluency, Relevance and Groundedness. A custom `evaluate.py` script has been written to run all evaulations for you.
-
-1. To run the script run the following commands:
-
-```shell
-cd ./src/api
-python -m evaluate.evaluate
-```
-
-- Check: You see scores for Coherence, Fluency, Relevance and Groundedness.
-- Check: The scores are between 1 and 5
-  
-
-2. To understand what is being evaluated open the `src/api/evaluate/eval_inputs.jsonl` file.
-   - Observe that 3 examples of research, product and assignment context are stored in this file. This data will be sent to the orchestrator so that each example will have:
-   - each example will have the evaluations run and will incoperate all of the context, research, products, and final article when grading the response.
-        
 
 ## Setting up CI/CD with GitHub actions
 
@@ -373,12 +249,6 @@ azd pipeline config
 This template uses `gpt-4o` and `gpt-4o-mini` which may not be available in all Azure regions. Check for [up-to-date region availability](https://learn.microsoft.com/azure/ai-services/openai/concepts/models#standard-deployment-model-availability) and select a region during deployment accordingly
   * We recommend using East US 2
 
-### Costs
-
-You can estimate the cost of this project's architecture with [Azure's pricing calculator](https://azure.microsoft.com/pricing/calculator/)
-
-* **Azure subscription with access enabled for [Bing Search API](https://www.microsoft.com/en-us/bing/apis/bing-web-search-api)**
-* **Azure subscription with access enabled for [Azure AI Search](https://azure.microsoft.com/en-gb/products/ai-services/ai-search)**
 
 ### Security
 
@@ -393,14 +263,178 @@ This template has either [Managed Identity](https://learn.microsoft.com/entra/id
 * [Quickstart: Multi-agent applications using Azure OpenAI article](https://learn.microsoft.com/en-us/azure/developer/ai/get-started-multi-agents?tabs=github-codespaces): The Microsoft Learn Quickstart article for this sample, walks through both deployment and the relevant code for orchestrating multi-agents in chat.
 * [Develop Python apps that use Azure AI services](https://learn.microsoft.com/azure/developer/python/azure-ai-for-python-developers)
 
-<!-- ******************************************************************************************************* -->
-<!-- ******************************************************************************************************* -->
-<!-- ******************************************************************************************************* -->
-<!-- ******************************************************************************************************* -->
+---
+
+# Lab 2 - Building and running Contoso Creative Writer
+
+We will now build and run Contoso Creativer Writer a multi-agent application! 
+
+All the commands in this notebook will need to be run from the terminal! 
+
+## [Step 1: Start the FastAPI server](#step-1-start-the-fastapi-server) 
+
+Complete the following tasks...
+
+**Tasks for you to do:**
+
+<br>
+
+1. We'll start by navigating to the correct folder. 
+
+**Run the below cell and copy and paste the output to the terminal**
+```console
+cd ./src/api
+```
+
+2. Next we'll run the FastAPI webserver with the following command (again copy and paste the output in the terminal):
+
+```console
+fastapi dev main.py
+```
+
+3. Next you'll need to change the visibility of the **8000** and **5173** ports to public in the **PORTS** tab. 
+
+    You can do this by right clicking on the visibility section of the port, selecting port visibility and setting it to public. 
+    <br>The ports tab should look like this:
+
+    <img src="./assets/crwriter-challenges/ports.png" alt="Screenshot showing setting port-visibility" width="800px" />
+
+To complete this step once the ports are public navigate back to the terminal tab and confirm that you can see *Application startup complete*. 
+
+## **Step 2: Start the web server**
+
+Complete the following tasks...
+
+**Tasks for you to do:**
+
+1. Open a **new terminal** and navigate to the web folder
+
+    Once you've completed the above steps. You'll need to:
+    - Open a **new terminal** 
+    - **Navigate to the web folder** by running the below command and copying and pasting the output to the terminal. 
+
+```console
+cd ./src/web
+```
+
+2. Next we will install the node packages (copy and paste output to the terminal):
+
+```console
+npm install
+```
+
+3. We can then run the web app with a local dev web server with this command (run the output in the terminal here too):
+
+```console
+npm run dev
+```
+
+4. Navigate to the Application:
+    - Once you've run the above command you should see an `http://localhost:5173/` link in the terminal. 
+    - Right click the link or click the **open on browser** button that comes up as a Gitub notification in the bottom right corner of the screen. 
+    - If you see a page from Github select the **continue** button. If not skip you should already see your app. 
+    - You should now see the app appear on your screen!
+
+To complete this step confirm that you can see the Constoso Creative Writer application. 
+
+## **Step 3: Test the app**
+
+Complete the following tasks...
+
+**Tasks for you to do:**
+
+1. Click the **Example** button to fill out the example information. Read the example instructions. 
+
+2. **Start Work** button to get Contoso Creative Writer to generate an article. 
+
+3. Click on the small **Debug** button at the bottom right of the Application to see which agent steps are carried out.
+
+To complete this step confirm that an article was generated that includes citation links and the products requested. 
+
+> **⭐BONUS:⭐** You can generate the article in a language of your choice. 
+><br> In the Assignment section add an instruction to create the article in your language and run the app again! 
+
+
+**Congratulations you've succesfully built and ran Contoso Creative Writer🎉**
+- [✅] Step 1: Start the FastAPI server 
+- [✅] Step 2: Start the Web Server
+- [✅] Step 3: Test the app
+
+> ⏰**Note:**
+> - Remember this lab is self paced so you can always complete it on your own, even after the session. 
+> - Do not worry if you are not able to finish everything during the workshop
 
 ---
 
-# Lab 4 - Under the hood of Contoso Creative Writer
+# Lab 3 - Setting up automated evaluations and deployment with Github Actions
+
+Contoso Creative Writer is set up to run a CI/CD pipeline, which stands for Continuous Integration and Continuous Deployment. 
+
+In this sample code the CI/CD pipeline includes the following: 
+1. **Build and Deploy:** Automatically building and deploying the latest version of the code in production (This helps us confirm things are working as expected.)
+2. **Evaulations:** Automatically running evaulations on a test article to see how fluent, grounded, relevant and coherent the final response was.
+
+<br>
+
+## **Step 1: Set up the azd pipeline configuration**
+
+We will set up the CI/CD pipeline with azd and GitHub actions. 
+
+#### Task 1: Initialize git Setup
+
+1. To do this **open a new terminal**. 
+
+2. You then need to **add github CLI as an authentication helper so you have the correct permissions by running the following commands: 
+
+```console
+gh auth setup-git
+```
+
+#### Task 2: Configure the CI/CD pipeline
+
+We can the use azd to **configure the CI/CD pipeline**:
+
+```console
+azd pipeline config
+```
+
+1. You will be asked if you want to commit and push your local changes. Choose `Y`
+    - You may be asked 'What would you like to do now?' Press enter to select `I have manually enabled GitHub Actions. Continue with pushing my changes.`
+    - You should see two links in your terminal. **Select the second link** to view your pipeline status. Where you will then see a green button. 
+
+2.  Click the green button that says **understand my workflows go ahead and enable them.** and return to the terminal after clicking the button. 
+
+3. **Rerun** the **azd pipeline config** command. 
+    - Select the second link again. 
+    - If you do not see anything on the screen wait for 10 seconds and then **reload the page.** 
+
+4. You should now see the two Github action workflows running on the screen, similar to what you see in the below image. 
+
+<img src="./assets/crwriter-challenges/gh_actions.png" alt="Github actions workflows" width="900" height="300">
+
+- Look at the subheading of the actions and wait till the **Evaluate** one turns green. 
+- It will likely take a few minutes to complete but once complete click the Evaluate action. 
+- The **DEPLOY** action will likely fail as we have not had the time to run azd up in this workshop. 
+
+## **Step 2: Examine evaluations**
+You now should see a table with some scores for **relevance, fluencey, coherence and groundedness** that looks like the image below:
+
+<img src="./assets/crwriter-challenges/evaluations.png" alt="Github actions workflows" width="900" height="500">
+
+<br>
+
+The scores are from 1-5, with 5 being the highest mark. These are used to help us know how well the model is performing.
+
+1. Examine the evaluations and think of some ways you might be able to improve a score in the future. 
+
+Congratulations you've succesfully automated evaluations and deployment🎉
+
+- [✅] Step 1: Set up the azd pipeline configuration
+- [✅] Step 2: Examine evaluations 
+
+---
+
+# Lab 4 - Understanding agents and prompt engineering with Prompty
 
 ## Overview
 Building Large Language Model (LLM) applications​ is hard! Companies want to build AI solutions, but how can they do this in a reliable, reproducible and observable way?​
@@ -415,18 +449,23 @@ This workshop will introduce new tooling that provides practical solutions to th
 
 In this section we will focus on four key outcomes, each split into their own notebook:
 
-1. [Understanding agents and prompt engineering with Prompty.](./assets/crwriter-challenges/workshop-1-intro.ipynb)
-2. [Utilizing Prompty tracing for debugging and observability.](./assets/crwriter-challenges/workshop-2-tracing.ipynb)
-3. [Building and running Contoso Creative Writer.](./assets/crwriter-challenges/workshop-3-build.ipynb)
-4. [Setting up automated evaluations with GitHub Actions.](./assets/crwriter-challenges/workshop-4-ci-cd.ipynb)
+1. Understanding agents and prompt engineering with Prompty.
+2. Utilizing Prompty tracing for debugging and observability.
+3. Building and running Contoso Creative Writer.
+4. Setting up automated evaluations with GitHub Actions.
 
-Open the [LAB-SETUP.ipynb](./assets/crwriter-challenges/LAB-SETUP.ipynb) notebook to go through authentication and refreshing your azd environment.
+```bash
+pip install -r requirements.txt
+pip install marshmallow==3.22.0 # if not present in requirements.txt
+
+azd env get-values > .env
+sed 's/^/export /' .env >> ~/.bashrc
+source ~/.bashrc
+```
 
 After completing the setup stage, you can get started with the rest of the workshop. 
 
-## Challenge 1 - Understanding agents and prompt engineering with Prompty
-
-### 1.1. What are AI agents?
+## 1.1. What are AI agents?
 
 Contoso Creative Writer is an Agentic Application.
 
@@ -444,7 +483,7 @@ goal.
 
 ![Agents in Contoso Creative Writer](./assets/crwriter-challenges/agents.png)
 
-### 1.2. How is an AI agent built?
+## 1.2. How is an AI agent built?
 
 Each agent in Contoso Creative Writer is built with
 [Prompty](https://prompty.ai/)!
@@ -517,7 +556,7 @@ developers.
 We\'ll look at how to use both of these to build and run an AI Agent
 next.
 
-### 1.3. Building an AI Agent
+## 1.3. Building an AI Agent
 
 To help us understand practically how we build an AI agent, we will
 build the **Researcher Agent** step by step.
@@ -529,39 +568,59 @@ In order to build the Researcher agent you will complete the following 3 steps:<
 
 Let\'s start with step 1.
 
-#### **Step 1: Build a multi-lingual query generator**
+### **Step 1: Build a multi-lingual query generator**
 
 The researcher agent generates queries that can be used to look for
 information online. It also allows us to find search
 results in multiple languages.
 
-Complete the following tasks\...
-**📃 Tasks for you to do:**
+#### Task 1
 
-> **TODO 1:** Open the
-> [researcher-0.prompty](researcher/researcher-0.prompty) file, read the
-> prompt and **click the play button** on the top right of the file.
->
-> -   You will be prompted to sign into an account. **Choose your
->     skillable email/username to sign in.**
->
-> -   Note: If you signed in with the wrong account by mistake sign out
->     of that account in the profile section at the bottom right of the
->     codespace and rerun the Prompty file.
+<div class="task" data-title="Instructions">
 
-> **Observations 👀:**
->
+> - Open the `docs/workshop/researcher/researcher-0.prompty` file, read the prompt and **click the play button** on the top right of the file.
+> - If you are inside Github Codespaces, and you have run the setup instructions earlier, you should see the results in the terminal.
+> - If you are your own environment, you may need to restart vscode to refresh the environment variables.
+
+</div>
+
+<div class="info" data-title="Observations 👀:">
+
 > -   Observe the output in the terminal.
-> -   Look in the Prompty file, notice the following instructions in the
->     **sample section**: `instructions: Can you
+> -   Look in the Prompty file, notice the following instructions in the **sample section**: <br> `instructions: Can you
 >     generate queries to find the latest camping trends and what folks
 >     are doing in the winter? Use \'en-US\' as the market code.`
+> -   Since you haven't replace `{{instructions}}` with your own instruction, the LLM used the sample instructions to generate the response.
 
+</div>
 
-> **TODO 2:** Edit the instructions to use a new language. (For example
+#### Task 2
+
+<div class="task" data-title="Instructions">
+
+> - Edit the instructions to use a new language. (For example
 > use `es-ES` instead of `en-US`, to get the results back in Spanish)
 
-#### **Step 2: Understanding LLM function calling with Prompty**
+</div>
+
+#### Task 3
+
+<div class="task" data-title="Instructions">
+
+> - Explore the `docs/workshop/instructions.json` file.
+> - Run the `docs/workshop/researcher/researcher-1.prompty` in VS Code and explore the results.
+
+</div>
+
+<div class="info" data-title="Observations 👀:">
+
+> -   Observe the output in the terminal.
+> -   You should see that the LLM has generated a response related to the weather in the United States today.
+
+</div>
+
+
+### **Step 2: Understanding LLM function calling with Prompty**
 
 In order for the researcher to generate even better queries it needs to
 know which search functions are avaialble to it.
@@ -573,82 +632,81 @@ know which search functions are avaialble to it.
 -   Information from a json file is passed to prompty using the
     `functions.json` format.
 
-In the case of the researcher we have a **functions.json** file with
+#### Task 1
+
+<div class="task" data-title="Instructions" >
+
+> In the case of the researcher we have a **functions.json** file with
 descriptions of 3 functions:
-
--   find_information
--   find_entities
--   find_news
-
-Open `functions.json` and read the description of the **find_information** function.
-
-Its important to note that **Prompty files can also be executed using
+>-   find_information
+>-   find_entities
+>-   find_news
+>
+> Open `functions.json` and read the description of the **find_information** function.
+>
+> Its important to note that **Prompty files can also be executed using
 Python code.** To see how Prompty works with tools we will
 switch to using code instead of pressing play on the file.
 
-Complete the following tasks\...
+<details>
+<summary>📚 Run the code:</summary>
 
-------------------------------------------------------------------------
-
-**Run the code:**
-
-> **📚 TODO 1:** Execute the researcher/researcher-2.prompty
-> ```python
+```python
 import prompty
 import prompty.azure
 import os
->
->instructions = "Can you find the best educational material for learning Python programming?"
+
+instructions = "Can you find the best educational material for learning Python programming?"
 prompty.execute(os.getcwd() + "/researcher/researcher-2.prompty", inputs={"instructions": instructions})
->```
-> **Observations 👀:**
+```
+</details>
+
+</div>
+
+<div class="info" data-title="Observations 👀">
+
+> - Observe the results. What do you see is different from the previous output?
+> - Navigate to `docs/workshop/researcher/researcher-2.prompty` and notice that `functions.json` has been added to **tools** under the *parameters* section in the file.
+> - What is the name of the tool called?
+> - In the result from running the Prompty file we saw that the **find_information** function was selected.
+>   - From its description in the `./docs/workshop/researcher/functions.json` file can you understand why it was chosen?
+>   - Observe that it finds general information on the web.
+>   - The LLM used the **instruction** we gave it and the **descriptions** it saw in *functions.json* to pick which function to call.
+>   - It also figured out which parameter values should be passed to the function.
+
+</div>
+
+<div class="tip" data-title="Take away">
+
+> - You should be getting a result like this: <br> ```[ToolCall(id='call_TgypFxasFvpYsBRin0yW9j0l', name='find_information', arguments='{"query":"best educational material for learning Python programming","market":"en-US"}')]```
+> - This means that Prompty is calling the **find_information** function to retrieve relevant input related to the users query.
+
+</div>
+
+#### Task 2
+
+We can influence which function is called by being more specific about the instructions we give the LLM. This is a form of **Prompt Engineering**.
+
+<div class="task" data-title="Instructions">
+
+> Get the LLM to use the **find_entities** function to help us find people, places or things by running the cell below:
 >
-> -   Observe the results. What do you see is different from the
->     previous output?
-> -   Navigate to
->     [researcher-2.prompty](researcher/researcher-2.prompty) and notice
->     that *\${<file:functions.json>}* has been added to **tools** under
->     the *parameters* section in the file.
-> -   What is the name of the tool called?
-
-In the result from running the Prompty file we saw that the
-**find_information** function was selected.
-
--   From its description in the
-    [functions.json](./researcher/functions.json) file can you
-    understand why it was chosen?
--   Observe that it finds general information on the web.
--   The LLM used the **instruction** we gave it and the **descriptions**
-    it saw in *functions.json* to pick which function to call.\
--   It also figured out which parameter values should be passed to the
-    function.
-
-We can influence which function is called by being more specific about
-the instructions we give the LLM. This is a form of **Prompt
-Engineering**.
-
-Complete the following tasks\...
-
-------------------------------------------------------------------------
-
-
-**Run the code:**
-
-> **TODO 2:** Get the LLM to use the **find_entities** function to help
-> us find people, places or things by running the cell below:
 > ``` python
 instructions = "Who is the person who invented the Python programming language?"
 prompty.execute(os.getcwd() + "/researcher/researcher-2.prompty", inputs={"instructions": instructions})
 > ```
-> **Observations 👀:**
->
-> Note that the **find_entities** function was selected by the LLM based
-> on:
->
-> 1.  **The description of the function** in
->     [functions.json](./researcher/functions.json)
+
+</div>
+
+<div class="info" data-title="Observations 👀">
+
+> Note that the **find_entities** function was selected by the LLM based on:
+> 1.  **The description of the function** in `./docs/workspace/researcher/functions.json`
 > 2.  The **instructions** we passed to it.
 
+</div>
+
+#### Task 3
 
 > **TODO 3:** Let\'s try to get the LLM to call the **find_news**
 > function by running the cell below:
@@ -698,7 +756,7 @@ prompty.execute(os.getcwd() + "/researcher/researcher-2.prompty", inputs={"instr
 > ```
 
 
-#### **Step 3: Build the functions and execute the research**
+### **Step 3: Build the functions and execute the research**
 
 We saw that the researcher:
 
@@ -716,10 +774,8 @@ to the **tools** parameter, the LLM returns a **list of Tool Calls**
 
 But where are the functions it should be calling?
 
--   The Python code for the functions described in *functions.json* can
-    be found in the [researcher3.py](researcher/researcher3.py) file.
--   These functions will pass the query and market code to the Bing
-    Search API.
+-   The Python code for the functions described in *functions.json* can be found in the [researcher3.py](researcher/researcher3.py) file.
+-   These functions will pass the query and market code to the Bing Search API.
 -   Open the [researcher3.py](researcher/researcher3.py) file and try
     and find the **find_information, find_news, find_entities**
     functions.
@@ -734,8 +790,6 @@ To put everything together the **research** function in
 
 Complete the final task\...
 
-------------------------------------------------------------------------
-
 **Run the code:**
 
 > **TODO:** Run the cell below to run the full researcher agent!
@@ -745,25 +799,23 @@ Complete the final task\...
 > ```python
 import sys
 import os
+from pprint import pprint
 >
 > # Add the path to sys.path
-sys.path.append(os.path.abspath('../../docs/workshop/researcher'))
+sys.path.append(os.path.abspath('../../src/api/agents/researcher'))
 >
-> from researcher3 import execute_researcher_prompty, execute_function_calls
+> from researcher import execute_research
 >
 > instructions = "Can you find the best educational material for learning Python programming"
 >
-> # Execute the researcher prompty to get a list of functions calls
-function_calls = execute_researcher_prompty(instructions=instructions)
->
 > # Execute the function calls
-research = execute_function_calls(function_calls)
-research
+result = execute_research(instructions)
+pprint(result)
 >```
 
 **Step 3 Complete ✅**
 
-#### Congratulations you\'ve succesfully built your first AI Agent with Prompty🎉
+**Congratulations you\'ve succesfully built your first AI Agent with Prompty🎉**
 
 -   \[✅\] Step 1: Build a multi-lingual query generator
 -   \[✅\] Step 2: Understanding LLM function calling with Prompty
@@ -771,9 +823,9 @@ research
 
 We can now succesfully move on to learning outcome 2
 
-## Challenge 2 - Utilizing Prompty tracing for debugging and observability
+---
 
-🚨**Double click on the notebook tab** above to keep the notebook open! 
+# Lab 5 - Utilizing Prompty tracing for debugging and observability
 
 When running Applications driven by LLMs, sometimes things don't go as expected! 
 <br>It's important to have a way to debug your LLM workflow so you can see where things are working. 
@@ -781,11 +833,9 @@ When running Applications driven by LLMs, sometimes things don't go as expected!
 
 To illustrate how to use local tracing in prompty let's build and debug a custom agent!
 
-### 2.1 Run and debug a custom social media agent
-
 <img src="./assets/crwriter-challenges/socialmediaagent.png" alt="social media agent" width="600" height="350">
 
-### What is the social media agent? 
+## What is the social media agent? 
 
 Today marketing departments not only need to write catchy blogs but they should also be able to promote the blogs and grow an audience on social media! 
 <br> We will be building a social media agent that can help us generate twitter threads! 
@@ -804,7 +854,7 @@ You should see a `./socialmedia/social.prompty` folder in the workshop folder. T
 
 Let's get started by testing out the agent!
 
-#### **Step 1: Run the code for social media agent**
+## **Step 1: Run the code for social media agent**
 The social media agent is a great way to generate twitter threads that are **4 tweets** long.  
 
 Complete the following task. 
@@ -834,9 +884,8 @@ social_media_instructions = "Write a fun and engaging twitter thread about AI Ag
 >   - Remember you should see 4 tweets in a twitter thread. Is this what is being returned?
 >   - Try to think what could be causing the bug? 
 
-**Step 1 Complete ✅**
 
-#### **Step 2: Use Prompty tracing to identify and fix the bug**
+## **Step 2: Use Prompty tracing to identify and fix the bug**
 We will use Prompty's built in tracing to identify the bug. 
 
 Complete the following task... 
@@ -851,8 +900,6 @@ Complete the following task...
 > **TODO 2:** To fix this bug go to the `socialmedia/social.prompty` file and edit the *max_tokens* amount to make it 1500. 
 > Rerun the code in the cell above and confirm the full thread is generated!
 
-**Step 2 Complete ✅**
-
 Congratulations you've succesfully used Prompty tracing for debugging🎉
 - [✅] Step 1: Run the code for social media agent
 - [✅] Step 2: Use Prompty Tracing to identify and fix the bug
@@ -861,8 +908,7 @@ Congratulations you've succesfully used Prompty tracing for debugging🎉
 
 Now that we have a good understanding of how to build and debug agents with Prompty let's run Contoso Creative Writer, a multi-agent solution! 
 
-## Challenge 3 - Building and running Contoso Creative Writer
 
-## Challenge 4 - Setting up automated evaluations with GitHub Actions
+## Conclusion
 
-
+You have now completed the workshop!
