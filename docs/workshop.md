@@ -37,14 +37,14 @@ To be able to do the lab content you will also need:
 - Create a [fork](https://github.com/Azure-Samples/contoso-creative-writer/fork) of the repository from the **main** branch to help you keep track of your potential changes
 
 3 development options are available:
-  - 🥇 **Preferred method** : Pre-configured GitHub Codespace
-  - 🥈 Local Devcontainer
-  - 🥉 Local Dev Environment with all the prerequisites detailed below
+
+- 🥇 **Preferred method** : Pre-configured GitHub Codespace
+- 🥈 Local Devcontainer
+- 🥉 Local Dev Environment with all the prerequisites detailed below
 
 <div class="tip" data-title="Tips">
 
 > To focus on the main purpose of the lab, we encourage the usage of devcontainers/codespace as they abstract the dev environment configuration, and avoid potential local dependencies conflict.
-> 
 > You could decide to run everything without relying on a devcontainer. To do so, make sure you install all the prerequisites detailed below in the chapter "local development".
 
 </div>
@@ -95,18 +95,16 @@ This project template provides the following features:
 
 ## Azure account requirements
 
-
 <div class="warning" data-title="Important">
 
 > In order to deploy and run this example, you'll need to have all the following requirements. If you don't have them, see with your coach if he can provide them.
 
 </div>
 
-
 * **Azure account**. If you're new to Azure, [get an Azure account for free](https://azure.microsoft.com/free/cognitive-search/) and you'll get some free Azure credits to get started. See [guide to deploying with the free trial](docs/deploy_lowcost.md).
 * **Azure subscription with access enabled for the Azure OpenAI Service**. If your access request to Azure OpenAI Service doesn't match the [acceptance criteria](https://learn.microsoft.com/legal/cognitive-services/openai/limited-access?context=%2Fazure%2Fcognitive-services%2Fopenai%2Fcontext%2Fcontext), you can use [OpenAI public API](https://platform.openai.com/docs/api-reference/introduction) instead.
     - Ability to deploy `gpt-4o` and `gpt-4o-mini`.
-    - We recommend using `eastus2`, as this region has access to all models and services required. 
+    - We recommend using `eastus2`, as this region has access to all models and services required.
 * **Azure subscription with access enabled for [Bing Search API](https://www.microsoft.com/en-us/bing/apis/bing-web-search-api)**
 * **Azure subscription with access enabled for [Azure AI Search](https://azure.microsoft.com/en-gb/products/ai-services/ai-search)**
 
@@ -117,25 +115,30 @@ The easiest way to get started is GitHub Codespaces, since it will setup all the
 
 ### GitHub Codespaces (preferred option)
 
-1. You can run this template virtually by using GitHub Codespaces. The button will open a web-based VS Code instance in your browser:
-   
+1. You can run this template virtually by using GitHub Codespaces. The button will open a web-based VS Code instance in your browser (be sure to have [forked](https://github.com/Azure-Samples/contoso-creative-writer/fork) the repository first):
+
     [![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/Azure-Samples/contoso-creative-writer)
 
 2. Open a terminal window.
 3. Sign in to your Azure account. You'll need to login to both the Azure Developer CLI and Azure CLI:
 
-    i. First with Azure Developer CLI 
+    i. First with Azure Developer CLI
 
     ```shell
     azd auth login
     ```
 
-    ii. Then sign in with Azure CLI 
+    ii. Then sign in with Azure CLI
     
     ```shell
     az login --use-device-code
     ```
 
+<div class="tip" data-title="Tips">
+
+> If the desired subscription is not displayed, you may have to specify the tenant for both commands. `azd auth login --tenant-id XXX  --use-device-code` and `az login --tenant XXXX  --use-device-code`
+
+</div>
 
 4. Provision the resources and deploy the code:
 
@@ -143,11 +146,12 @@ The easiest way to get started is GitHub Codespaces, since it will setup all the
     azd up
     ```
 
-    You will be prompted to select some details about your deployed resources, including location. As a reminder we recommend `East US 2` as the region for this project.
-    Once the deployment is complete you should be able to scroll up in your terminal and see the url that the app has been deployed to. It should look similar to this 
-    `Ingress Updated. Access your app at https://env-name.codespacesname.eastus2.azurecontainerapps.io/`. Navigate to the link to try out the app straight away! 
+    You will be prompted to select some details about your deployed resources, including location. As a reminder we recommend `East US 2` as the region for this project but you can try with another one if you want.
+    Once the deployment is complete, you should be able to scroll up in your terminal and see the url that the app has been deployed to. It should look similar to this:
+    `Ingress Updated. Access your app at https://env-name.codespacesname.eastus2.azurecontainerapps.io/`.
+    Navigate to the link to try out the app straight away!
 
-5. Once the above steps are completed you can [test the sample](#testing-the-sample). 
+5. Once the above steps are completed you can test the sample.
 
 ### VS Code Dev Containers
 
@@ -166,7 +170,8 @@ A related option is VS Code Dev Containers, which will open the project in your 
     cd src/api
     pip install -r requirements.txt
     ```
-   Once you've completed these steps jump to [deployment](#deployment). 
+
+   Once you've completed these steps jump to **deployment** part.
 
 ### Local environment
 
@@ -177,7 +182,7 @@ A related option is VS Code Dev Containers, which will open the project in your 
 * [Docker Desktop](https://www.docker.com/products/docker-desktop/)
 * [Git](https://git-scm.com/downloads)
 
-**Note for Windows users:** If you are not using a container to run this sample, our hooks are currently all shell scripts. To provision this sample correctly while we work on updates we recommend using [git bash](https://gitforwindows.org/). 
+**Note for Windows users:** If you are not using a container to run this sample, our hooks are currently all shell scripts. To provision this sample correctly while we work on updates we recommend using [git bash](https://gitforwindows.org/).
 
 #### Initializing the project
 
@@ -197,18 +202,18 @@ A related option is VS Code Dev Containers, which will open the project in your 
 
 ## Deployment
 
-Once you've opened the project in [Codespaces](#github-codespaces), [Dev Containers](#vs-code-dev-containers), or [locally](#local-environment), you can deploy it to Azure.
+Once you've opened the project in **Codespaces**, **Dev Containers**, or **locally**, you can deploy it to Azure.
 
 1. Sign in to your Azure account. You'll need to login to both the Azure Developer CLI and Azure CLI:
 
-    i. First with Azure Developer CLI 
+    i. First with Azure Developer CLI
 
     ```shell
     azd auth login
     ```
 
-    ii. Then sign in with Azure CLI 
-    
+    ii. Then sign in with Azure CLI
+
     ```shell
     az login --use-device-code
     ```
@@ -227,20 +232,19 @@ Once you've opened the project in [Codespaces](#github-codespaces), [Dev Contain
 
    After running azd up, you may be asked the following question during `Github Setup`:
 
-   ```shell 
+   ```shell
    Do you want to configure a GitHub action to automatically deploy this repo to Azure when you push code changes?
    (Y/n) Y
    ```
 
-   You should respond with `N`, as this is not a necessary step, and takes some time to set up. 
-
-
+   You should respond with `N`, as this is not a necessary step, and takes some time to set up.
 
 ## Setting up CI/CD with GitHub actions
 
 This template is set up to run CI/CD when you push changes to your repo. When CI/CD is configured, evaluations will in GitHub actions and then automatically deploy your app on push to main.
 
 To set up CI/CD with GitHub actions on your repository, run the following command:
+
 ```shell
 azd pipeline config
 ```
@@ -251,7 +255,6 @@ azd pipeline config
 
 This template uses `gpt-4o` and `gpt-4o-mini` which may not be available in all Azure regions. Check for [up-to-date region availability](https://learn.microsoft.com/azure/ai-services/openai/concepts/models#standard-deployment-model-availability) and select a region during deployment accordingly
   * We recommend using East US 2
-
 
 ### Security
 
@@ -270,11 +273,11 @@ This template has either [Managed Identity](https://learn.microsoft.com/entra/id
 
 # Lab 2 - Building and running Contoso Creative Writer
 
-We will now build and run Contoso Creativer Writer a multi-agent application! 
+We will now build and run Contoso Creativer Writer a multi-agent application!
 
-All the commands in this notebook will need to be run from the terminal! 
+All the commands in this notebook will need to be run from the terminal!
 
-## [Step 1: Start the FastAPI server](#step-1-start-the-fastapi-server) 
+## [Step 1: Start the FastAPI server](#step-1-start-the-fastapi-server)
 
 Complete the following tasks...
 
@@ -285,6 +288,7 @@ Complete the following tasks...
 1. We'll start by navigating to the correct folder. 
 
 **Run the below cell and copy and paste the output to the terminal**
+
 ```console
 cd ./src/api
 ```
@@ -295,14 +299,14 @@ cd ./src/api
 fastapi dev main.py
 ```
 
-3. Next you'll need to change the visibility of the **8000** and **5173** ports to public in the **PORTS** tab. 
+3. Next you'll need to change the visibility of the **8000** and **5173** ports to public in the **PORTS** tab.
 
-    You can do this by right clicking on the visibility section of the port, selecting port visibility and setting it to public. 
+    You can do this by right clicking on the visibility section of the port, selecting port visibility and setting it to public.
     <br>The ports tab should look like this:
 
     <img src="./assets/crwriter-challenges/ports.png" alt="Screenshot showing setting port-visibility" width="800px" />
 
-To complete this step once the ports are public navigate back to the terminal tab and confirm that you can see *Application startup complete*. 
+To complete this step once the ports are public navigate back to the terminal tab and confirm that you can see *Application startup complete*.
 
 ## **Step 2: Start the web server**
 
@@ -313,8 +317,8 @@ Complete the following tasks...
 1. Open a **new terminal** and navigate to the web folder
 
     Once you've completed the above steps. You'll need to:
-    - Open a **new terminal** 
-    - **Navigate to the web folder** by running the below command and copying and pasting the output to the terminal. 
+    - Open a **new terminal**
+    - **Navigate to the web folder** by running the below command and copying and pasting the output to the terminal.
 
 ```console
 cd ./src/web
@@ -333,12 +337,12 @@ npm run dev
 ```
 
 4. Navigate to the Application:
-    - Once you've run the above command you should see an `http://localhost:5173/` link in the terminal. 
-    - Right click the link or click the **open on browser** button that comes up as a Gitub notification in the bottom right corner of the screen. 
-    - If you see a page from Github select the **continue** button. If not skip you should already see your app. 
+    - Once you've run the above command you should see an `http://localhost:5173/` link in the terminal.
+    - Right click the link or click the **open on browser** button that comes up as a Gitub notification in the bottom right corner of the screen.
+    - If you see a page from Github select the **continue** button. If not skip you should already see your app.
     - You should now see the app appear on your screen!
 
-To complete this step confirm that you can see the Constoso Creative Writer application. 
+To complete this step confirm that you can see the Constoso Creative Writer application.
 
 ## **Step 3: Test the app**
 
@@ -346,17 +350,16 @@ Complete the following tasks...
 
 **Tasks for you to do:**
 
-1. Click the **Example** button to fill out the example information. Read the example instructions. 
+1. Click the **Example** button to fill out the example information. Read the example instructions.
 
-2. **Start Work** button to get Contoso Creative Writer to generate an article. 
+2. **Start Work** button to get Contoso Creative Writer to generate an article.
 
 3. Click on the small **Debug** button at the bottom right of the Application to see which agent steps are carried out.
 
-To complete this step confirm that an article was generated that includes citation links and the products requested. 
+To complete this step confirm that an article was generated that includes citation links and the products requested.
 
 > **⭐BONUS:⭐** You can generate the article in a language of your choice. 
-><br> In the Assignment section add an instruction to create the article in your language and run the app again! 
-
+><br> In the Assignment section add an instruction to create the article in your language and run the app again!
 
 **Congratulations you've succesfully built and ran Contoso Creative Writer🎉**
 - [✅] Step 1: Start the FastAPI server 
@@ -371,7 +374,7 @@ To complete this step confirm that an article was generated that includes citati
 
 # Lab 3 - Setting up automated evaluations and deployment with Github Actions
 
-Contoso Creative Writer is set up to run a CI/CD pipeline, which stands for Continuous Integration and Continuous Deployment. 
+Contoso Creative Writer is set up to run a CI/CD pipeline, which stands for Continuous Integration and Continuous Deployment.
 
 In this sample code the CI/CD pipeline includes the following: 
 1. **Build and Deploy:** Automatically building and deploying the latest version of the code in production (This helps us confirm things are working as expected.)
@@ -381,13 +384,13 @@ In this sample code the CI/CD pipeline includes the following:
 
 ## **Step 1: Set up the azd pipeline configuration**
 
-We will set up the CI/CD pipeline with azd and GitHub actions. 
+We will set up the CI/CD pipeline with azd and GitHub actions.
 
 #### Task 1: Initialize git Setup
 
-1. To do this **open a new terminal**. 
+1. To do this **open a new terminal**.
 
-2. You then need to **add github CLI as an authentication helper so you have the correct permissions by running the following commands: 
+2. You then need to **add github CLI as an authentication helper so you have the correct permissions by running the following commands:
 
 ```console
 gh auth setup-git
@@ -403,21 +406,21 @@ azd pipeline config
 
 1. You will be asked if you want to commit and push your local changes. Choose `Y`
     - You may be asked 'What would you like to do now?' Press enter to select `I have manually enabled GitHub Actions. Continue with pushing my changes.`
-    - You should see two links in your terminal. **Select the second link** to view your pipeline status. Where you will then see a green button. 
+    - You should see two links in your terminal. **Select the second link** to view your pipeline status. Where you will then see a green button.
 
-2.  Click the green button that says **understand my workflows go ahead and enable them.** and return to the terminal after clicking the button. 
+2.  Click the green button that says **understand my workflows go ahead and enable them.** and return to the terminal after clicking the button.
 
-3. **Rerun** the **azd pipeline config** command. 
-    - Select the second link again. 
-    - If you do not see anything on the screen wait for 10 seconds and then **reload the page.** 
+3. **Rerun** the **azd pipeline config** command.
+    - Select the second link again.
+    - If you do not see anything on the screen wait for 10 seconds and then **reload the page.**
 
-4. You should now see the two Github action workflows running on the screen, similar to what you see in the below image. 
+4. You should now see the two Github action workflows running on the screen, similar to what you see in the below image.
 
 <img src="./assets/crwriter-challenges/gh_actions.png" alt="Github actions workflows" width="900" height="300">
 
-- Look at the subheading of the actions and wait till the **Evaluate** one turns green. 
-- It will likely take a few minutes to complete but once complete click the Evaluate action. 
-- The **DEPLOY** action will likely fail as we have not had the time to run azd up in this workshop. 
+- Look at the subheading of the actions and wait till the **Evaluate** one turns green.
+- It will likely take a few minutes to complete but once complete click the Evaluate action.
+- The **DEPLOY** action will likely fail as we have not had the time to run azd up in this workshop.
 
 ## **Step 2: Examine evaluations**
 You now should see a table with some scores for **relevance, fluencey, coherence and groundedness** that looks like the image below:
@@ -428,12 +431,12 @@ You now should see a table with some scores for **relevance, fluencey, coherence
 
 The scores are from 1-5, with 5 being the highest mark. These are used to help us know how well the model is performing.
 
-1. Examine the evaluations and think of some ways you might be able to improve a score in the future. 
+1. Examine the evaluations and think of some ways you might be able to improve a score in the future.
 
 Congratulations you've succesfully automated evaluations and deployment🎉
 
 - [✅] Step 1: Set up the azd pipeline configuration
-- [✅] Step 2: Examine evaluations 
+- [✅] Step 2: Examine evaluations
 
 ---
 
@@ -622,17 +625,16 @@ results in multiple languages.
 
 </div>
 
-
 ### **Step 2: Understanding LLM function calling with Prompty**
 
 In order for the researcher to generate even better queries it needs to
 know which search functions are avaialble to it.
 
--   Using the Prompty **tools** parameter an LLM can choose from
+- Using the Prompty **tools** parameter an LLM can choose from
     functions described in a json file.
--   We can add information about which functions (sometimes called
+- We can add information about which functions (sometimes called
     tools), the LLM has access to in a **functions.json** file.
--   Information from a json file is passed to prompty using the
+- Information from a json file is passed to prompty using the
     `functions.json` format.
 
 #### Task 1
@@ -662,6 +664,7 @@ import os
 instructions = "Can you find the best educational material for learning Python programming?"
 prompty.execute(os.getcwd() + "/researcher/researcher-2.prompty", inputs={"instructions": instructions})
 ```
+
 </details>
 
 </div>
@@ -727,7 +730,6 @@ prompty.execute(os.getcwd() + "/researcher/researcher-2.prompty", inputs={"instr
 > -   The find_news function has not been selected by the LLM.
 > -   Look in the functions.json file and see what\'s wrong.
 
-
 > **TODO 4:** Add the function description for find_news to the
 > functions.json file. (💡Click the play icon for the details.) Once
 > added rerun the cell above!
@@ -757,7 +759,6 @@ prompty.execute(os.getcwd() + "/researcher/researcher-2.prompty", inputs={"instr
     }
   }
 > ```
-
 
 ### **Step 3: Build the functions and execute the research**
 
@@ -849,7 +850,6 @@ You should see a `./socialmedia/social.prompty` folder in the workshop folder. T
 - a **social.prompty file:** This contains the base prompt for the social media agent. 
 <br>It has been instructed to generate a thread of **4 tweets**.
 
-
 > Steps to build and debug the social media agent:
 >
 > **Step 1:** Run the code for social media agent<br>
@@ -860,7 +860,7 @@ Let's get started by testing out the agent!
 ## **Step 1: Run the code for social media agent**
 The social media agent is a great way to generate twitter threads that are **4 tweets** long.  
 
-Complete the following task. 
+Complete the following task.
 
 ---
 **Tasks for you to do:**
@@ -887,7 +887,6 @@ social_media_instructions = "Write a fun and engaging twitter thread about AI Ag
 >   - Remember you should see 4 tweets in a twitter thread. Is this what is being returned?
 >   - Try to think what could be causing the bug? 
 
-
 ## **Step 2: Use Prompty tracing to identify and fix the bug**
 We will use Prompty's built in tracing to identify the bug. 
 
@@ -907,10 +906,9 @@ Congratulations you've succesfully used Prompty tracing for debugging🎉
 - [✅] Step 1: Run the code for social media agent
 - [✅] Step 2: Use Prompty Tracing to identify and fix the bug
 
-**⭐Bonus⭐:** If you have time at the end of the workshop come back and edit the social media agent prompt to generate content for another site like LinkedIn. 
+**⭐Bonus⭐:** If you have time at the end of the workshop come back and edit the social media agent prompt to generate content for another site like LinkedIn.
 
-Now that we have a good understanding of how to build and debug agents with Prompty let's run Contoso Creative Writer, a multi-agent solution! 
-
+Now that we have a good understanding of how to build and debug agents with Prompty let's run Contoso Creative Writer, a multi-agent solution!
 
 ## Conclusion
 
