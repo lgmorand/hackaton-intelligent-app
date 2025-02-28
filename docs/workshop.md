@@ -8,8 +8,8 @@ level: intermediate # Required. Can be 'beginner', 'intermediate' or 'advanced'
 navigation_numbering: false
 navigation_levels: 3
 authors: # Required. You can add as many authors as needed
-  - Fethi Dilmi
-  - Louis-Guillaume Morand
+  - Fethi DILMI
+  - Louis-Guillaume MORAND
 contacts: # Required. Must match the number of authors
   - "@fethidilmi"
   - "@lgmorand"
@@ -20,6 +20,10 @@ tags: azure, azure openai, azure bing web, azure cognitive search, cosmosdb, azu
 
 # Build a multi-tasking assistant with Azure OpenAI
 
+## Introduction
+
+Welcome to this hands-on lab where you are going to play with Azure and create your own multi-task assistant. Please read **carefully** any line of this lab as it will guide you to success.
+
 ## Pre-requisites
 
 Before starting this lab, be sure to set your Azure environment :
@@ -29,8 +33,8 @@ Before starting this lab, be sure to set your Azure environment :
 To be able to do the lab content you will also need:
 
 - Basic understanding of Azure resources.
-- A Github account (Free, Team or Enterprise)
-- Create a [fork][repo-fork] of the repository from the **main** branch to help you keep track of your potential changes
+- A [Github](https://www.github.com) account (Free, Team or Enterprise)
+- Create a [fork](https://github.com/Azure-Samples/contoso-creative-writer/fork) of the repository from the **main** branch to help you keep track of your potential changes
 
 3 development options are available:
   - 🥇 **Preferred method** : Pre-configured GitHub Codespace
@@ -41,7 +45,7 @@ To be able to do the lab content you will also need:
 
 > To focus on the main purpose of the lab, we encourage the usage of devcontainers/codespace as they abstract the dev environment configuration, and avoid potential local dependencies conflict.
 > 
-> You could decide to run everything without relying on a devcontainer : To do so, make sure you install all the prerequisites detailed below.
+> You could decide to run everything without relying on a devcontainer. To do so, make sure you install all the prerequisites detailed below in the chapter "local development".
 
 </div>
 
@@ -66,23 +70,15 @@ This project follows below responsible AI guidelines and best practices, please 
 - [Responsible AI practices for Azure OpenAI models](https://learn.microsoft.com/en-us/legal/cognitive-services/openai/overview)
 - [Safety evaluations transparency notes](https://learn.microsoft.com/en-us/azure/ai-studio/concepts/safety-evaluations-transparency-note)
 
-
-<!-- ******************************************************************************************************* -->
-<!-- ******************************************************************************************************* -->
-<!-- ******************************************************************************************************* -->
-<!-- ******************************************************************************************************* -->
-
 ---
 
 # Lab 1 - Deploy a Creative Writing Assistant
 
 ## Overview
 
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/Azure-Samples/contoso-creative-writer) [![Open in Dev Containers](https://img.shields.io/static/v1?style=for-the-badge&label=Dev%20Containers&message=Open&color=blue&logo=visualstudiocode)](https://vscode.dev/redirect?url=vscode://ms-vscode-remote.remote-containers/cloneInVolume?url=https://github.com/azure-samples/contoso-creative-writer) 
+Contoso Creative Writer is an app that will help you write well researched, product specific articles. Once launched, enter the required information and then click "Start Work". To watch the steps in the agent workflow select the debug button in the bottom right corner of the screen. The result will begin writing once the agents complete the tasks to write the article.
 
-Contoso Creative Writer is an app that will help you write well researched, product specific articles. Enter the required information and then click "Start Work". To watch the steps in the agent workflow select the debug button in the bottom right corner of the screen. The result will begin writing once the agents complete the tasks to write the article.
-
-This sample demonstrates how to create and work with AI agents driven by [Azure OpenAI](https://learn.microsoft.com/en-us/azure/ai-services/openai/). It includes a FastAPI app that takes a topic and instruction from a user and then calls a research agent that uses the [Bing Search API](https://www.microsoft.com/en-us/bing/apis/bing-web-search-api) to research the topic, a product agent that uses [Azure AI Search](https://azure.microsoft.com/en-gb/products/ai-services/ai-search) to do a semantic similarity search for related products from a vector store, a writer agent to combine the research and product information into a helpful article, and an editor agent to refine the article that's finally presented to the user.
+This application demonstrates how to create and work with AI agents driven by [Azure OpenAI](https://learn.microsoft.com/en-us/azure/ai-services/openai/). It includes a FastAPI app that takes a topic and instruction from a user and then calls a research agent that uses the [Bing Search API](https://www.microsoft.com/en-us/bing/apis/bing-web-search-api) to research the topic, a product agent that uses [Azure AI Search](https://azure.microsoft.com/en-gb/products/ai-services/ai-search) to do a semantic similarity search for related products from a vector store, a writer agent to combine the research and product information into a helpful article, and an editor agent to refine the article that's finally presented to the user. You are going to build and run this application.
 
 ![App preview](./assets/crwriter-deployment/app_preview.png)
 
@@ -99,7 +95,13 @@ This project template provides the following features:
 
 ## Azure account requirements
 
-**IMPORTANT:** In order to deploy and run this example, you'll need:
+
+<div class="warning" data-title="Important">
+
+> In order to deploy and run this example, you'll need to have all the following requirements. If you don't have them, see with your coach if he can provide them.
+
+</div>
+
 
 * **Azure account**. If you're new to Azure, [get an Azure account for free](https://azure.microsoft.com/free/cognitive-search/) and you'll get some free Azure credits to get started. See [guide to deploying with the free trial](docs/deploy_lowcost.md).
 * **Azure subscription with access enabled for the Azure OpenAI Service**. If your access request to Azure OpenAI Service doesn't match the [acceptance criteria](https://learn.microsoft.com/legal/cognitive-services/openai/limited-access?context=%2Fazure%2Fcognitive-services%2Fopenai%2Fcontext%2Fcontext), you can use [OpenAI public API](https://platform.openai.com/docs/api-reference/introduction) instead.
@@ -113,11 +115,11 @@ This project template provides the following features:
 You have a few options for setting up this project.
 The easiest way to get started is GitHub Codespaces, since it will setup all the tools for you, but you can also [set it up locally](#local-environment).
 
-### GitHub Codespaces
+### GitHub Codespaces (preferred option)
 
 1. You can run this template virtually by using GitHub Codespaces. The button will open a web-based VS Code instance in your browser:
    
-    [![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/Azure-Samples/agent-openai-python-prompty)
+    [![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/Azure-Samples/contoso-creative-writer)
 
 2. Open a terminal window.
 3. Sign in to your Azure account. You'll need to login to both the Azure Developer CLI and Azure CLI:
@@ -133,6 +135,7 @@ The easiest way to get started is GitHub Codespaces, since it will setup all the
     ```shell
     az login --use-device-code
     ```
+
 
 4. Provision the resources and deploy the code:
 
@@ -153,7 +156,7 @@ A related option is VS Code Dev Containers, which will open the project in your 
 1. Start Docker Desktop (install it if not already installed)
 2. Open the project:
    
-    [![Open in Dev Containers](https://img.shields.io/static/v1?style=for-the-badge&label=Dev%20Containers&message=Open&color=blue&logo=visualstudiocode)](https://vscode.dev/redirect?url=vscode://ms-vscode-remote.remote-containers/cloneInVolume?url=https://github.com/Azure-Samples/agent-openai-python-prompty.git)
+    [![Open in Dev Containers](https://img.shields.io/static/v1?style=for-the-badge&label=Dev%20Containers&message=Open&color=blue&logo=visualstudiocode)](https://vscode.dev/redirect?url=vscode://ms-vscode-remote.remote-containers/cloneInVolume?url=https://github.com/Azure-Samples/contoso-creative-writer.git)
 
 3. In the VS Code window that opens, once the project files show up (this may take several minutes), open a terminal window.
 
@@ -181,7 +184,7 @@ A related option is VS Code Dev Containers, which will open the project in your 
 1. Create a new folder and switch to it in the terminal, then run this command to download the project code:
 
     ```shell
-    azd init -t agent-openai-python-prompty
+    azd init -t contoso-creative-writer
     ```
     Note that this command will initialize a git repository, so you do not need to clone this repository.
 
