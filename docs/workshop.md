@@ -286,20 +286,35 @@ Once you've opened the project in **Codespaces**, **Dev Containers**, or **local
     ```Ingress Updated. Access your app at https://env-name.codespacesname.eastus2.azurecontainerapps.io/```<br><br>
     > **Navigate to the link to try out the app straight away! 🎉**
 
-## Troubleshooting Guidance
+## Common Deployment Issues
+
+When running the ```azd up``` command, you may face some issues. Below are some common issues and their solutions.
 
 ### Grounding with Bing Search ineligibility
 
-If you faced duing the ```azd up``` command the following error:
+<div class="important" data-title="Error Message">
 
-```json
-{
-  "code": "SkuNotEligible",
-  "message": "The subscription is not eligible for the selected SKU G1"
-}
-```
+>```json
+>{
+>  "code": "SkuNotEligible",
+>  "message": "The subscription is not eligible for the selected SKU G1"
+>}
+>```
 
-This means that your Azure subscription is not eligible for Grounding with Bing Search API. You need to ask your coach to provide you with a ```BING_SEARCH_API_KEY``` and modify the ```infra/core/bing/bing-search.bicep``` file as follows:	
+</div>
+
+<div class="info" data-title="Explanation">
+
+> This means that your Azure subscription is not eligible for Grounding with Bing Search API. You need to ask your coach to provide you with a ```BING_SEARCH_API_KEY``` and follow the recommended solution below.
+
+</div>
+
+<details>
+
+<summary> Toggle Solution ✅</summary>
+
+1. Go to the `infra/core/bing/bing-search.bicep` file and comment out the `bing` resource.
+2. Add the ```BING_SEARCH_API_KEY``` in the corresponding output.
 
 ```bicep
 metadata description = 'Creates a Bing Search Grounding instance.'
@@ -320,18 +335,107 @@ param tags object = {}
 // }
 
 #disable-next-line outputs-should-not-contain-secrets
-output bingApiKey string = '<bing-search-api-key-given-by-your-coach>'
+output bingApiKey string = '<bing-search-api-key-given-by-your-coach>' //instead of bing.listKeys().key1
 output endpoint string = 'https://api.bing.microsoft.com/'
-output bingName string = name //bing.name
-output bingLocation string = location
-output bingSku string = sku
+output bingName string = name //instead of "bing.name"
 ```
 
-You can re-run ```azd up``` command to deploy the application again.
+3. In the ```infra/ai/hub.bicep```, locate the bingConnection resource and add the ```BING_SEARCH_API_KEY``` while commenting out the ```bing``` resource:
+```bicep
+  ...
+  ...
+  //Locate the bingConnection resource and add the bing-search-api-key
+  resource bingConnection 'connections' = {
+    name: bingConnectionName
+    properties: {
+      category: 'ApiKey'
+      authType: 'ApiKey'
+      isSharedToAll: true
+      target: 'https://api.bing.microsoft.com/'
+      credentials: {
+        key: '<bing-search-api-key-given-by-your-coach>' //instead of bing.listKeys().key1
+      }
+      metadata: {
+        location: 'global'
+      }
+    }
+  }
+}
+
+...
+
+//resource bing 'Microsoft.Bing/accounts@2020-06-10' existing = {
+//  name: bingName
+//}
+
+output name string = hub.name
+output id string = hub.id
+output principalId string = hub.identity.principalId
+```
+4. You can re-run ```azd up``` command to deploy the application again.
+
+</details>
 
 ### Insufficient Azure permissions
 
 tbd
+
+### Insufficient Quotas
+
+<div class="important" data-title="Error Message">
+
+>```shell
+>ERROR: error executing step command 'provision': deployment failed: error deploying infrastructure: deploying to subscription:
+>
+>Deployment Error Details:
+>InvalidTemplateDeployment: The template deployment 'cognitiveServices' is not valid according to the validation procedure. The tracking id is '8dcef7cc-920e-4f5e-ac52-2b60dedeab9a'. See inner errors for details.
+>InsufficientQuota: This operation require 80 new capacity in quota Tokens Per Minute (thousands) - gpt-4o - GlobalStandard, which is bigger than the current available capacity 8. The current quota usage is 0 and the quota limit is 8 for quota Tokens Per Minute (thousands) - gpt-4o - GlobalStandard.
+>```
+</div>
+
+<div class="info" data-title="Explanation">
+
+> - This error is due to insufficient quota for the Azure AI Service.
+> - We can see that we are request ```80,000``` Tokens Per Minute capacity, while we have a maximum capacity of ```8,000``` Tokens Per Minute (and ```8000``` left).
+
+</div>
+
+<details>
+
+<summary> Toggle Solution ✅</summary>
+
+1. Go to ```infra/ai.yaml``` and split your available capacity between the different models.
+2. Try to allocate the highest share of available capacity to gpt-4 model, because it's the most called model in this lab.
+
+```yaml
+# yaml-language-server: $schema=ai.yaml.json
+
+deployments:
+  - name: text-embedding-ada-002
+    model:
+      format: OpenAI
+      name: text-embedding-ada-002
+      version: "2"
+    sku:
+      name: "Standard"
+      capacity: 2  # default template value: 20
+  - name: gpt-4
+    model:
+      format: OpenAI
+      name: gpt-4o
+      version: "2024-05-13"
+    sku:
+      name: "GlobalStandard"
+      capacity: 4 # default template value: 80
+  - name: gpt-4-evals
+    model:
+      format: OpenAI
+      name: gpt-4o-mini
+      version: "2024-07-18"
+    sku:
+      name: "GlobalStandard"
+      capacity: 2 # default template value: 80
+```
 
 ### Code requirements incorrect
 
