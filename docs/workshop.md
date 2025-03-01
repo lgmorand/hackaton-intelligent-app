@@ -25,24 +25,21 @@ Welcome to this hands-on lab where you are going to play with Azure and create y
 
 ## Pre-requisites
 
-Before starting this lab, be sure to set your Azure environment :
-
-- An Azure Subscription with the **Owner** role to create and manage the labs' resources and deploy the infrastructure as code.
-- Make sure your Azure Subscription is not restricted through Azure Policies.
-- To be able to create play the CI/CD lab, you need to be able to create Entra ID application registrations.
-
 To be able to do the lab content you will also need:
 
 - Basic understanding of Azure resources.
-- A **personal** [Github](https://www.github.com) account. If you want to use your **enterprise** account, make sure your organization allows forks and has enabled the use Github Codespaces.
-- Create a [fork](https://github.com/fethidilmi/contoso-creative-writer/fork) of the repository from the **main** branch to help you keep track of your potential changes.
+- A [Github](https://www.github.com) account.
+- Basic understanding of Python or a similar language.
 
 ## Azure account requirements
 
-<div class="warning" data-title="Important">
+<div class="important" data-title="Important">
 
 > In order to deploy and run this example, you'll need to have all the following requirements. If you don't have them, see with your coach if he can provide them.<br>
 > * **Azure account**. If you're new to Azure, [get an Azure account for free](https://azure.microsoft.com/free/cognitive-search/) and you'll get some free Azure credits to get started. See [guide to deploying with the free trial](docs/deploy_lowcost.md).
+    - Make sure you have an **Owner** role to create and manage the labs' resources and deploy the infrastructure as code.
+    - Make sure your Azure Subscription is not restricted through Azure Policies.
+    - To be able to create play the CI/CD lab, you need to be able to create Entra ID application registrations.
 > * **Azure subscription with access enabled for the Azure OpenAI Service**. If your access request to Azure OpenAI Service doesn't match the [acceptance criteria](https://learn.microsoft.com/legal/cognitive-services/openai/limited-access?context=%2Fazure%2Fcognitive-services%2Fopenai%2Fcontext%2Fcontext), you can use [OpenAI public API](https://platform.openai.com/docs/api-reference/introduction) instead.
     - Ability to deploy `gpt-4o` and `gpt-4o-mini`.
     - We recommend using `eastus2`, as this region has access to all models and services required.
@@ -53,18 +50,11 @@ To be able to do the lab content you will also need:
 
 </div>
 
-3 development options are available:
+## Security
 
-- 🥇 **Preferred method** : Pre-configured GitHub Codespace
-- 🥈 Local Devcontainer
-- 🥉 Local Dev Environment with all the prerequisites detailed below
-
-<div class="tip" data-title="Tips">
-
-> To focus on the main purpose of the lab, we encourage the usage of devcontainers/codespace as they abstract the dev environment configuration, and avoid potential local dependencies conflict.
-> You could decide to run everything without relying on a devcontainer. To do so, make sure you install all the prerequisites detailed below in the chapter "local development".
-
-</div>
+> When implementing this template please specify whether the template uses Managed Identity or Key Vault.
+> <br><br>This template has either [Managed Identity](https://learn.microsoft.com/entra/identity/managed-identities-azure-resources/overview) or Key Vault built in to eliminate the need for developers to manage these credentials. Applications can use managed identities to obtain Microsoft Entra tokens without having to manage any credentials. 
+> <br><br>Additionally, we have added a [GitHub Action tool](https://github.com/microsoft/security-devops-action) that scans the infrastructure-as-code files and generates a report containing any detected issues. To ensure best practices in your repo we recommend anyone creating solutions based on our templates ensure that the [Github secret scanning](https://docs.github.com/code-security/secret-scanning/about-secret-scanning) setting is enabled in your repos.
 
 ## Code of Conduct
 
@@ -87,17 +77,21 @@ This project follows below responsible AI guidelines and best practices, please 
 - [Responsible AI practices for Azure OpenAI models](https://learn.microsoft.com/en-us/legal/cognitive-services/openai/overview)
 - [Safety evaluations transparency notes](https://learn.microsoft.com/en-us/azure/ai-studio/concepts/safety-evaluations-transparency-note)
 
+## Other Resources
+
+* [Prompty Documentation](https://prompty.ai/)
+* [Quickstart: Multi-agent applications using Azure OpenAI article](https://learn.microsoft.com/en-us/azure/developer/ai/get-started-multi-agents?tabs=github-codespaces): The Microsoft Learn Quickstart article for this sample, walks through both deployment and the relevant code for orchestrating multi-agents in chat.
+* [Develop Python apps that use Azure AI services](https://learn.microsoft.com/azure/developer/python/azure-ai-for-python-developers)
+
 ---
 
 # Lab 1 - Deploy a Creative Writing Assistant
 
-## Overview of Contoso Creative Writer
+## Step 1: Overview
 
 Contoso Creative Writer is an app that will help you write well researched, product specific articles. Once launched, enter the required information and then click "Start Work". To watch the steps in the agent workflow select the debug button in the bottom right corner of the screen. The result will begin writing once the agents complete the tasks to write the article.
 
-This application demonstrates how to create and work with AI agents driven by [Azure OpenAI](https://learn.microsoft.com/en-us/azure/ai-services/openai/). It includes a FastAPI app that takes a topic and instruction from a user and then calls a research agent that uses the [Bing Search API](https://www.microsoft.com/en-us/bing/apis/bing-web-search-api) to research the topic, a product agent that uses [Azure AI Search](https://azure.microsoft.com/en-gb/products/ai-services/ai-search) to do a semantic similarity search for related products from a vector store, a writer agent to combine the research and product information into a helpful article, and an editor agent to refine the article that's finally presented to the user. You are going to build and run this application.
-
-![App preview](./assets/crwriter-deployment/app_preview.png)
+This application demonstrates how to create and work with AI agents driven by [Azure OpenAI](https://learn.microsoft.com/en-us/azure/ai-services/openai/). It includes a FastAPI app that takes a topic and instruction from a user and then calls a research agent that uses the [Grounding with Bing Search API](https://learn.microsoft.com/en-us/azure/ai-services/agents/how-to/tools/bing-grounding?view=azure-python-preview&tabs=python&pivots=code-example) to research the topic, a product agent that uses [Azure AI Search](https://azure.microsoft.com/en-gb/products/ai-services/ai-search) to do a semantic similarity search for related products from a vector store, a writer agent to combine the research and product information into a helpful article, and an editor agent to refine the article that's finally presented to the user. You are going to build and run this application.
 
 ![Agent workflow preview](./assets/crwriter-deployment/agent.png)
 
@@ -108,78 +102,86 @@ This project template provides the following features:
 * [Grounding with Bing Search API](https://blogs.bing.com/search/January-2025/Introducing-Grounding-with-Bing-Search-in-Azure-AI-Agent-Service) to research the topic provided
 * [Azure AI Search](https://azure.microsoft.com/en-gb/products/ai-services/ai-search) for performing semantic similarity search
   
-![Architecture Digram](./assets/crwriter-deployment/Creative_writing_aca.png)
+![Architecture Diagram](./assets/crwriter-deployment/Creative_writing_aca.png)
 
-## Getting Started
+## Step 2: Setup your environment
 
 You have a few options for setting up this project.
-The easiest way to get started is GitHub Codespaces, since it will setup all the tools for you, but you can also [set it up locally](#local-environment).
 
-### Option 1: GitHub Codespaces (preferred option)
-
-#### Step 1: Open the project in GitHub Codespaces
-
-1. Make sure your connect to Github with your personal account and not with an Enteprise-Managed User (through an identity provider).
-
-2. Fork the this [repository](https://github.com/fethidilmi/contoso-creative-writer/fork). And then open it in GitHub Codespaces:
-
-   [![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg) ](https://codespaces.new/fethidilmi/contoso-creative-writer)
-
-<div class="warning" data-title="Warning">
-
-> Make sure you select the forked repository (```yourusername/contoso-creative-writer```) and not the original one.
-> For example, if your username is ```gaurav123```, you should select ```gaurav123/contoso-creative-writer```.
-> ![Codespace](./assets/crwriter-deployment/codespace-setup.png)
-
-</div>
-
-3. Open a terminal window.
-
-#### Step 2: Install required packages
-
-1. Sign in to your Azure account. You'll need to login to both the Azure Developer CLI and Azure CLI:
-
-    i. First with Azure Developer CLI
-
-    ```shell
-    azd auth login
-    ```
-
-    ii. Then sign in with Azure CLI
-    
-    ```shell
-    az login --use-device-code
-    ```
+- 🥇 **Preferred method** : Pre-configured GitHub Codespace
+- 🥈 Local Devcontainer
+- 🥉 Local Dev Environment with all the prerequisites detailed below
 
 <div class="tip" data-title="Tips">
 
-> If the desired subscription is not displayed, use your keyboard's arrow to scroll through the list of subscriptions until you find it. 
-> If the desired subscription is still not displayed, you may have to specify the tenant for both commands. `azd auth login --tenant-id XXX  --use-device-code` and `az login --tenant XXXX  --use-device-code`
+> To focus on the main purpose of the lab, we encourage the usage of devcontainers/codespace as they abstract the dev environment configuration, and avoid potential local dependencies conflict.
+> You could decide to run everything without relying on a devcontainer. To do so, make sure you install all the prerequisites detailed below in the chapter "local development".
 
 </div>
 
-2. Provision the resources and deploy the code:
+### Option 1: GitHub Codespaces (preferred option)
 
-    ```shell
-    azd up
+1. Connect with your Github account.
+
+    <div class="warning" data-title="Warning">
+
+    > - Make sure you connect to Github with your personal account and not with an Enteprise-Managed User (through an identity provider).
+    > - If you want to use your **enterprise** account, make sure your organization allows forks and has enabled the use Github Codespaces.
+
+    </div>
+
+2. Fork the this [repository](https://github.com/fethidilmi/contoso-creative-writer/fork).
+
+3. Open GitHub Codespaces on the official repository ```Azure-Samples/contoso-creative-writer```:
+
+   [![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg) ](https://codespaces.new/Azure-Samples/contoso-creative-writer)
+
+    <div class="warning" data-title="Warning">
+
+    > If you are using a Github Enterprise Managed User, you might be prompted to login to your Github account against the ```Azure-Samples``` organisation (which is the upstream of your forked repo). If so, follow the instructions to do so.
+    ![extra-step](./assets/crwriter-deployment/extrastep-github.png)
+    </div>
+
+4. Once inside the Codespace, change the remote origin to your forked repo. 
+    ```console
+    git remote set-url origin https://github.com/<your-github-username>/contoso-creative-writer.git
+    git pull
     ```
+    
+    This should see and output like this:
 
-    You will be prompted to select some details about your deployed resources, including location. As a reminder we recommend `East US 2` as the region for this project but you can try with another one if you want.
-    Once the deployment is complete, you should be able to scroll up in your terminal and see the url that the app has been deployed to. It should look similar to this:
-    `Ingress Updated. Access your app at https://env-name.codespacesname.eastus2.azurecontainerapps.io/`.
-    Navigate to the link to try out the app straight away!
+    ![alt text](./assets/crwriter-deployment/change-remote-origin.png)
 
-3. Once the above steps are completed you can test the sample.
+    <div class="tip">
+
+    > **Congratulations 🎉**<br><br>
+    > You've succesfully connected to the lab's repository through GitHub Codespace🎉.<br>
+    > You can now move on the [Deployment](step=1#deployment) part.
+
+    </div>
 
 ### Option 2: VS Code Dev Containers
 
 A related option is VS Code Dev Containers, which will open the project in your local VS Code using the [Dev Containers extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers):
 
 1. Start Docker Desktop (install it if not already installed)
+
 2. Open the project:
    
     [![Open in Dev Containers](https://img.shields.io/static/v1?style=for-the-badge&label=Dev%20Containers&message=Open&color=blue&logo=visualstudiocode)](https://vscode.dev/redirect?url=vscode://ms-vscode-remote.remote-containers/cloneInVolume?url=https://github.com/fethidilmi/contoso-creative-writer.git)
-    [![Open in Dev Containers](https://img.shields.io/static/v1?style=for-the-badge&label=Dev%20Containers&message=Open&color=blue&logo=visualstudiocode)](https://vscode.dev/redirect?url=vscode://ms-vscode-remote.remote-containers/cloneInVolume?url=https://github.com/fethidilmi/contoso-creative-writer.git)
+
+    <div class="warning" data-title="Warning">
+    
+    > - If you do not have Docker Desktop installed/working, you can use [Windows Subsystem for Linux (WSL)](https://learn.microsoft.com/en-us/windows/wsl/install) as an alternative.
+    > - Once installed, clone the forked github repository and run the following:
+    >```console
+    >git clone https://github.com/yourusername/contoso-creative-writer.git
+    >cd contoso-creative-writer
+    >code . &
+    >```
+    > - VS Code will will detect the Dev Container and prompts you to Reload the repository inside of it. Accept it:
+    > ![dev-container](./assets/crwriter-deployment/devcontainer-vscvode.png)
+    </div>
 
 3. In the VS Code window that opens, once the project files show up (this may take several minutes), open a terminal window.
 
@@ -190,39 +192,54 @@ A related option is VS Code Dev Containers, which will open the project in your 
     pip install -r requirements.txt
     ```
 
-   Once you've completed these steps jump to **deployment** part.
+    <div class="tip">
+
+    > **Congratulations 🎉**<br><br>
+    > You've succesfully connected to the lab's repository through **VS Code Dev Containers**🎉.<br>
+    > You can now move on the [Deployment](step=1#deployment) part.
+
+    </div>
 
 ### Option 3: Local environment
 
-#### Step 1: Setup local pre-requisites
+1. Setup local pre-requisites
 
-* [Azure Developer CLI (azd)](https://aka.ms/install-azd)
-* [Python 3.10+](https://www.python.org/downloads/)
-* [Docker Desktop](https://www.docker.com/products/docker-desktop/)
-* [Git](https://git-scm.com/downloads)
+    * [Azure Developer CLI (azd)](https://aka.ms/install-azd)
+    * [Python 3.10+](https://www.python.org/downloads/)
+    * [Docker Desktop](https://www.docker.com/products/docker-desktop/)
+    * [Git](https://git-scm.com/downloads)
 
-**Note for Windows users:** If you are not using a container to run this sample, our hooks are currently all shell scripts. To provision this sample correctly while we work on updates we recommend using [git bash](https://gitforwindows.org/).
+    > **Note for Windows users:**
+    > - If you are not using a container to run this sample, we recommend using the hooks that run shell scripts, and for that you would need a Linux container. To provision this sample correctly while we work on updates we recommend using [git bash](https://gitforwindows.org/).<br>
+    > - Another option **(which we recommend)**, is to use [Azure Cloud Shell](https://learn.microsoft.com/en-us/azure/cloud-shell/new-ui-shell-window) with Bash for all these operations.
 
-#### Step 2: Initializing the project
-
-1. Create a new folder and switch to it in the terminal, then run this command to download the project code:
+2. Clone your forked repository:
 
     ```shell
-    azd init -t contoso-creative-writer
-    azd init -t contoso-creative-writer
+    git clone https://github.com/yourusername/contoso-creative-writer.git
+    cd contoso-creative-writer/
     ```
-    Note that this command will initialize a git repository, so you do not need to clone this repository.
 
-2. Install required packages:
+3. Install required packages:
 
     ```shell
     cd src/api
     pip install -r requirements.txt
     ```
 
-## Deployment
+## Step 3: Deployment
 
 Once you've opened the project in **Codespaces**, **Dev Containers**, or **locally**, you can deploy it to Azure.
+
+<div class="important" data-title="Important">
+
+> - Deployment might fail for different reasons, so we invite you to check the **Guidance** section below for special instructions for certain cases.
+> - We can categorize the different deployment failure as follows:
+>   - Grounding with Bing Search ineligibility
+>   - Insufficient Azure permissions
+>   - Code requirerments incorrect
+
+</div>
 
 1. Sign in to your Azure account. You'll need to login to both the Azure Developer CLI and Azure CLI:
 
@@ -232,62 +249,93 @@ Once you've opened the project in **Codespaces**, **Dev Containers**, or **local
     azd auth login
     ```
 
-    ii. Then sign in with Azure CLI
+    > This will create a folder under `.azure/` in your project to store the configuration for this deployment. You may have multiple azd environments if desired.
 
+    ii. Then sign in with Azure CLI
+    
     ```shell
     az login --use-device-code
     ```
 
-    If you have any issues with that command, you may also want to try `azd auth login --use-device-code`.
+    <div class="tip" data-title="Tips">
 
-    This will create a folder under `.azure/` in your project to store the configuration for this deployment. You may have multiple azd environments if desired.
+    > - If the desired subscription is not displayed, use your keyboard's arrow to scroll through the list of subscriptions until you find it. 
+    > - If the desired subscription is still not displayed, you may have to specify the tenant for both commands. `azd auth login --tenant-id XXX  --use-device-code` and `az login --tenant XXXX  --use-device-code`
 
-2. Provision the resources and deploy the code:
+    </div>
+
+2. Provision the resources and deploy the code
 
     ```shell
     azd up
     ```
 
-    This project uses `gpt-4o` and `gpt-4o-mini which may not be available in all Azure regions. Check for [up-to-date region availability](https://learn.microsoft.com/azure/ai-services/openai/concepts/models#standard-deployment-model-availability) and select a region during deployment accordingly. We recommend using East US 2 for this project.
+    > - You will be prompted to select some details about your deployed resources, including location. As a reminder we recommend ```East US 2``` as the region for this project but you can try with another one if you want.
+    > - This project uses `gpt-4o` and ```gpt-4o-mini``` which may not be available in all Azure regions. Check for [up-to-date region availability](https://learn.microsoft.com/azure/ai-services/openai/concepts/models#standard-deployment-model-availability) and select a region during deployment accordingly.
 
-   After running azd up, you may be asked the following question during `Github Setup`:
+    After running azd up, you may be asked the following question during `Github Setup`:
 
-   ```shell
-   Do you want to configure a GitHub action to automatically deploy this repo to Azure when you push code changes?
-   (Y/n) Y
-   ```
+    ```shell
+    Do you want to configure a GitHub action to automatically deploy this repo to Azure when you push code changes?
+    (Y/n) Y
+    ```
 
-   You should respond with `N`, as this is not a necessary step, and takes some time to set up.
+    You should respond with `N`, as this is not a necessary step, and takes some time to set up.
 
-## Setting up CI/CD with GitHub actions
+    > Once the deployment is complete, you should be able to scroll up in your terminal and see the url that the app has been deployed to. It should look similar to this:
+    ```Ingress Updated. Access your app at https://env-name.codespacesname.eastus2.azurecontainerapps.io/```<br><br>
+    > **Navigate to the link to try out the app straight away! 🎉**
 
-This template is set up to run CI/CD when you push changes to your repo. When CI/CD is configured, evaluations will in GitHub actions and then automatically deploy your app on push to main.
+## Troubleshooting Guidance
 
-To set up CI/CD with GitHub actions on your repository, run the following command:
+### Grounding with Bing Search ineligibility
 
-```shell
-azd pipeline config
+If you faced duing the ```azd up``` command the following error:
+
+```json
+{
+  "code": "SkuNotEligible",
+  "message": "The subscription is not eligible for the selected SKU G1"
+}
 ```
 
-## Guidance
+This means that your Azure subscription is not eligible for Grounding with Bing Search API. You need to ask your coach to provide you with a ```BING_SEARCH_API_KEY``` and modify the ```infra/core/bing/bing-search.bicep``` file as follows:	
 
-### Region Availability
+```bicep
+metadata description = 'Creates a Bing Search Grounding instance.'
+param name string
+param location string = 'global'
+param sku string = 'G1'
+param tags object = {}
 
-This template uses `gpt-4o` and `gpt-4o-mini` which may not be available in all Azure regions. Check for [up-to-date region availability](https://learn.microsoft.com/azure/ai-services/openai/concepts/models#standard-deployment-model-availability) and select a region during deployment accordingly
-  * We recommend using East US 2
+// Comment this resource
+// resource bing 'Microsoft.Bing/accounts@2020-06-10' = {
+//   name: name
+//   location: location
+//   kind: 'Bing.Grounding'
+//   tags: (contains(tags, 'Microsoft.Bing/accounts') ? tags['Microsoft.Bing/accounts'] : json('{}'))
+//   sku: {
+//     name: sku
+//   }
+// }
 
-### Security
+#disable-next-line outputs-should-not-contain-secrets
+output bingApiKey string = '<bing-search-api-key-given-by-your-coach>'
+output endpoint string = 'https://api.bing.microsoft.com/'
+output bingName string = name //bing.name
+output bingLocation string = location
+output bingSku string = sku
+```
 
-> [NOTE]
-> When implementing this template please specify whether the template uses Managed Identity or Key Vault
+You can re-run ```azd up``` command to deploy the application again.
 
-This template has either [Managed Identity](https://learn.microsoft.com/entra/identity/managed-identities-azure-resources/overview) or Key Vault built in to eliminate the need for developers to manage these credentials. Applications can use managed identities to obtain Microsoft Entra tokens without having to manage any credentials. Additionally, we have added a [GitHub Action tool](https://github.com/microsoft/security-devops-action) that scans the infrastructure-as-code files and generates a report containing any detected issues. To ensure best practices in your repo we recommend anyone creating solutions based on our templates ensure that the [Github secret scanning](https://docs.github.com/code-security/secret-scanning/about-secret-scanning) setting is enabled in your repos.
+### Insufficient Azure permissions
 
-## Resources
+tbd
 
-* [Prompty Documentation](https://prompty.ai/)
-* [Quickstart: Multi-agent applications using Azure OpenAI article](https://learn.microsoft.com/en-us/azure/developer/ai/get-started-multi-agents?tabs=github-codespaces): The Microsoft Learn Quickstart article for this sample, walks through both deployment and the relevant code for orchestrating multi-agents in chat.
-* [Develop Python apps that use Azure AI services](https://learn.microsoft.com/azure/developer/python/azure-ai-for-python-developers)
+### Code requirements incorrect
+
+tbd
 
 ---
 
