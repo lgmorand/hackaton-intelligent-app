@@ -286,11 +286,11 @@ Once you've opened the project in **Codespaces**, **Dev Containers**, or **local
     ```Ingress Updated. Access your app at https://env-name.codespacesname.eastus2.azurecontainerapps.io/```<br><br>
     > **Navigate to the link to try out the app straight away! 🎉**
 
-## Common Deployment Issues
+## Step 4: Deal with Common Deployment Issues
 
 When running the ```azd up``` command, you may face some issues. Below are some common issues and their solutions.
 
-### Grounding with Bing Search ineligibility
+### Issue 1: Grounding with Bing Search ineligibility
 
 <div class="important" data-title="Error Message">
 
@@ -376,11 +376,7 @@ output principalId string = hub.identity.principalId
 
 </details>
 
-### Insufficient Azure permissions
-
-tbd
-
-### Insufficient Quotas
+### Issue 2: Insufficient Quotas
 
 <div class="important" data-title="Error Message">
 
@@ -436,10 +432,20 @@ deployments:
       name: "GlobalStandard"
       capacity: 2 # default template value: 80
 ```
+</details>
 
-### Code requirements incorrect
+<div class="warning" data-title="Warning">
 
-tbd
+> - You may encounter issues in the postprovisioning step in relation with these quota adjustments. If so, you may want to adjust the capacity such that ```text-emdedding-ada-002``` has a higher capacity than ```gpt-4-evals```
+> - Keep in mind that you can manually set the from Azure AI Foundry portal the quotas without needing to redeploy the application every time.
+
+</div>
+
+### Issue 3: Code requirements incorrect
+
+If you are not in Codespace or Devcontainer, you may face some issues with the code requirements. Below are some common ways to solve them:
+- ```pip install --upgrade "<your-package>"``` to upgrade a stale version of a package.
+- Look at ```.devcontainer/Dockerfile``` to see if you are lacking some system-level packages
 
 ---
 
