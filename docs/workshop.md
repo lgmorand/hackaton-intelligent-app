@@ -400,8 +400,8 @@ output principalId string = hub.identity.principalId
 
 <summary> Toggle Solution ✅</summary>
 
-1. Go to ```infra/ai.yaml``` and split your available capacity between the different models.
-2. Try to allocate the highest share of available capacity to gpt-4 model, because it's the most called model in this lab.
+1. Go to ```infra/ai.yaml``` and set your available capacity for  the different models.
+2. Your yaml should look like this.
 
 ```yaml
 # yaml-language-server: $schema=ai.yaml.json
@@ -414,7 +414,7 @@ deployments:
       version: "2"
     sku:
       name: "Standard"
-      capacity: 2  # default template value: 20
+      capacity: 8  # default template value: 20
   - name: gpt-4
     model:
       format: OpenAI
@@ -422,7 +422,7 @@ deployments:
       version: "2024-05-13"
     sku:
       name: "GlobalStandard"
-      capacity: 4 # default template value: 80
+      capacity: 8 # default template value: 80
   - name: gpt-4-evals
     model:
       format: OpenAI
@@ -430,7 +430,7 @@ deployments:
       version: "2024-07-18"
     sku:
       name: "GlobalStandard"
-      capacity: 2 # default template value: 80
+      capacity: 8 # default template value: 80
 ```
 </details>
 
