@@ -758,7 +758,7 @@ The researcher agent generates queries that can be used to look for
 information online. It also allows us to find search
 results in multiple languages.
 
-#### Task 1
+#### Task 1: Understanding your first Prompty file
 
 <div class="task" data-title="Instructions">
 
@@ -778,7 +778,7 @@ results in multiple languages.
 
 </div>
 
-#### Task 2
+#### Task 2: Generate queries in a different language
 
 <div class="task" data-title="Instructions">
 
@@ -787,7 +787,13 @@ results in multiple languages.
 
 </div>
 
-#### Task 3
+<div class="info" data-title="Observation">
+
+> - You should see results in Spanish.
+
+</div>
+
+#### Task 3: Using a separate file for instructions
 
 <div class="task" data-title="Instructions">
 
@@ -815,7 +821,7 @@ know which search functions are avaialble to it.
 - Information from a json file is passed to prompty using the
     `functions.json` format.
 
-#### Task 1
+#### Task 1: Run the Prompty file from code
 
 <div class="task" data-title="Instructions" >
 
@@ -867,7 +873,7 @@ prompty.execute(os.getcwd() + "/researcher/researcher-2.prompty", inputs={"instr
 
 </div>
 
-#### Task 2
+#### Task 2: Prompt Engineering
 
 We can influence which function is called by being more specific about the instructions we give the LLM. This is a form of **Prompt Engineering**.
 
@@ -890,28 +896,40 @@ prompty.execute(os.getcwd() + "/researcher/researcher-2.prompty", inputs={"instr
 
 </div>
 
-#### Task 3
+#### Task 3: Add a new function description
 
-> **TODO 3:** Let\'s try to get the LLM to call the **find_news**
-> function by running the cell below:
+<div class="task" data-title="Instructions">
+
+> - Let's try to get the LLM to call the **find_news** function by running the cell below:
 > ``` python
 instructions = "Find the latest news about Microsoft?"
 prompty.execute(os.getcwd() + "/researcher/researcher-2.prompty", inputs={"instructions": instructions})
 >```
->
-> **🐞BUG ALERT:** A bug has purposefully been left in the functions.json file.
->
-> Observations 👀:
->
+</div>
+
+<div class="important" data-title="🐞BUG ALERT">
+
+> A bug has purposefully been left in the functions.json file.
+
+</div>
+
+<div class="info" data-title="Observations 👀:">
+
 > -   Which function call has been selected, if any?
 > -   Is this the function we want?
 > -   The find_news function has not been selected by the LLM.
 > -   Look in the functions.json file and see what\'s wrong.
 
-> **TODO 4:** Add the function description for find_news to the
-> functions.json file. (💡Click the play icon for the details.) Once
-> added rerun the cell above!
-> **find_news function description:** 
+</div>
+
+<details>
+<summary>📚 Toggle Bug Solution </summary>
+
+<div class="tip" data-title="Solution">
+
+> - In order to find news for the previous task, add the function description for ```find_news``` to the
+> ```./docs/workshop/researcher/functions.json``` file. (💡Click the play icon for the details.) 
+> - Once added rerun the code above !
 > ``` json
 {
     "type": "function",
@@ -937,6 +955,9 @@ prompty.execute(os.getcwd() + "/researcher/researcher-2.prompty", inputs={"instr
     }
   }
 > ```
+</div>
+
+</details>
 
 ### **Step 3: Build the functions and execute the research**
 
@@ -956,46 +977,40 @@ to the **tools** parameter, the LLM returns a **list of Tool Calls**
 
 But where are the functions it should be calling?
 
--   The Python code for the functions described in *functions.json* can be found in the [researcher3.py](researcher/researcher3.py) file.
+-   The Python code for the functions described in *functions.json* can be found in the ```./docs/workshop/researcher/researcher3.py``` file.
 -   These functions will pass the query and market code to the Bing Search API.
--   Open the [researcher3.py](researcher/researcher3.py) file and try
-    and find the **find_information, find_news, find_entities**
-    functions.
+-   Open the ```./docs/workshop/researcher/researcher3.py``` file and try and find the **find_information, find_news, find_entities** functions.
 
-To put everything together the **research** function in
-[researcher3.py](researcher/researcher3.py) calls:
+To put everything together the ```research()``` function in ```docs/workshop/researcher/researcher3.py``` calls:
 
--   an **execute_researcher_prompty** function that has the code we saw
-    earlier to execute the prompty file
--   an **execute_function_calls** function that runs code to execute all
-    the functions calls
+-   an **execute_researcher_prompty** function that has the code we saw earlier to execute the prompty file
+-   an **execute_function_calls** function that runs code to execute all the functions calls
 
-Complete the final task\...
+<div class="task" data-title="Instructions">
 
-**Run the code:**
-
-> **TODO:** Run the cell below to run the full researcher agent!
->
-> -   Try different instructions and see which results you get and which
->     function is called.
+> - Try different instructions and see which results you get and which function is called.
+> - Exectute the following python code from within ```docs/workshop/researcher``` folder.
 > ```python
-import sys
-import os
-from pprint import pprint
+>from pprint import pprint
+>from researcher3 import execute_researcher_prompty, execute_function_calls
 >
-> # Add the path to sys.path
-sys.path.append(os.path.abspath('../../src/api/agents/researcher'))
+>instructions = "Can you find the best educational material for learning Python programming"
 >
-> from researcher import execute_research
+># Execute the researcher prompty to get a list of functions calls
+>function_calls = execute_researcher_prompty(instructions=instructions)
 >
-> instructions = "Can you find the best educational material for learning Python programming"
->
-> # Execute the function calls
-result = execute_research(instructions)
-pprint(result)
+># Execute the function calls
+>research = execute_function_calls(function_calls)
+>pprint(research)
 >```
 
-**Step 3 Complete ✅**
+</div>
+
+<div class="info" data-title="Observations 👀:">
+
+> - Observe the results. What do you see is different from the previous output?
+
+</div>
 
 **Congratulations you\'ve succesfully built your first AI Agent with Prompty🎉**
 
@@ -1038,47 +1053,66 @@ Let's get started by testing out the agent!
 ## **Step 1: Run the code for social media agent**
 The social media agent is a great way to generate twitter threads that are **4 tweets** long.  
 
-Complete the following task.
+<div class="task" data-title="Instructions">
 
----
-**Tasks for you to do:**
-> **TODO:** Run the following code into your jupyter notebook.
+> Move to the ```/docs/workshop/socialmedia``` folder and run the code below in the terminal.
+> 
 >```python
-import sys
-import os
->
-># Add the path to sys.path
-sys.path.append(os.path.abspath('../../docs/workshop/socialmedia'))
->
 >from social import run_social_media_agent
 >
 >research_instructions = "Find information about AI Agents"
-social_media_instructions = "Write a fun and engaging twitter thread about AI Agents given the research."
+>social_media_instructions = "Write a fun and engaging twitter thread about AI Agents given the research."
 >
->run_social_media_agent(instructions=research_instructions, social_media_instructions = social_media_instructions)
+>run_social_media_agent(
+>    instructions=research_instructions,
+>    social_media_instructions=social_media_instructions,
+>    research_prompty_file_path='../researcher/researcher-2.prompty')
 >```
->
-> **🐞BUG ALERT:** A bug has been purposefully left in the prompty file. We will use tracing to quickly spot the bug and fix it!
->
-> **Observations 👀:**
+
+</div>
+
+<div class="important" data-title="🐞BUG ALERT">
+
+> A bug has been purposefully left in the prompty file. We will use tracing to quickly spot the bug and fix it!
+
+</div>
+
+<div class="info" data-title="Observations 👀:">
+
 >   - What do you observe that is strange from the results?
 >   - Remember you should see 4 tweets in a twitter thread. Is this what is being returned?
 >   - Try to think what could be causing the bug? 
 
+</div>
+
 ## **Step 2: Use Prompty tracing to identify and fix the bug**
 We will use Prompty's built in tracing to identify the bug. 
 
-Complete the following task... 
+<div class="task" data-title="Instructions">
 
-> **TODO 1:** To see the trace generated by Prompty open the **workshop** folder in the file explorer and look for a **.runs** folder in it. 
-> Select this folder and click the **execute_social_media_writer_prompty.tracy** file at the top of the folder. 
-> **Observations 👀:**
->   - This page shows you information that prompty has sent to or recieved from the LLM. 
->   - In this specific case look at the *Completion Tokens* amount. 
->   - This shows less than a 1000 tokens, which is not enough for us to generate a twitter thread. 
+> - To see the trace generated by Prompty open the ```./docs/workshop/socialmedia/``` folder in the file explorer and look for a ```/.runs``` folder in it. 
+> - Select this folder and click the ```execute_social_media_writer_prompty.tracy``` file at the top of the folder. 
+</div>
 
-> **TODO 2:** To fix this bug go to the `socialmedia/social.prompty` file and edit the *max_tokens* amount to make it 1500. 
-> Rerun the code in the cell above and confirm the full thread is generated!
+<div class="info" data-title="Observations 👀:">
+
+> - This page shows you information that prompty has sent to or recieved from the LLM. 
+> ![execute_prompty](./assets/crwriter-challenges/execute_prompty.png)
+> - In this specific case look at the *Completion Tokens* amount. 
+> - This shows less than a 1000 tokens, which is not enough for us to generate a twitter thread. 
+
+</div>
+
+<details>
+<summary>📚 Toggle Bug Solution </summary>
+<div class="tip" data-title="Solution">
+
+> - The bug is related to the ```max_tokens``` amount in the social.prompty file.
+> - To fix this bug go to the ```socialmedia/social.prompty``` file and edit the *max_tokens* amount to make it 1500.
+> - Re-run the code above, you should now see the full twitter thread generated!
+
+</div>
+</details>
 
 Congratulations you've succesfully used Prompty tracing for debugging🎉
 - [✅] Step 1: Run the code for social media agent
