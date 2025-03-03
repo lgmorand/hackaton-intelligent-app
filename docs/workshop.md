@@ -156,7 +156,7 @@ You have a few options for setting up this project.
 
     > **Congratulations 🎉**<br><br>
     > You've succesfully connected to the lab's repository through GitHub Codespace🎉.<br>
-    > You can now move on the [Deployment](step=1#deployment) part.
+    > You can now move on the Deployment part.
 
     </div>
 
@@ -196,7 +196,7 @@ A related option is VS Code Dev Containers, which will open the project in your 
 
     > **Congratulations 🎉**<br><br>
     > You've succesfully connected to the lab's repository through **VS Code Dev Containers**🎉.<br>
-    > You can now move on the [Deployment](step=1#deployment) part.
+    > You can now move on the Deployment part.
 
     </div>
 
@@ -313,66 +313,70 @@ When running the ```azd up``` command, you may face some issues. Below are some 
 
 <summary> Toggle Solution ✅</summary>
 
-1. Go to the `infra/core/bing/bing-search.bicep` file and comment out the `bing` resource.
-2. Add the ```BING_SEARCH_API_KEY``` in the corresponding output.
+<div class="tip" data-title="Solution">
 
-```bicep
-metadata description = 'Creates a Bing Search Grounding instance.'
-param name string
-param location string = 'global'
-param sku string = 'G1'
-param tags object = {}
+> 1. Go to the `infra/core/bing/bing-search.bicep` file and comment out the `bing` resource.
+> 2. Add the ```BING_SEARCH_API_KEY``` in the corresponding output.
+>
+>```bicep
+> metadata description = 'Creates a Bing Search Grounding instance.'
+> param name string
+> param location string = 'global'
+> param sku string = 'G1'
+> param tags object = {}
+> 
+> // Comment this resource
+> // resource bing 'Microsoft.Bing/accounts@2020-06-10' = {
+> //   name: name
+> //   location: location
+> //   kind: 'Bing.Grounding'
+> //   tags: (contains(tags, 'Microsoft.Bing/accounts') ? tags['Microsoft.Bing/accounts'] : json('{}'))
+> //   sku: {
+> //     name: sku
+> //   }
+> // }
+> 
+> #disable-next-line outputs-should-not-contain-secrets
+> output bingApiKey string = '<bing-search-api-key-given-by-your-coach>' //instead of bing.listKeys().key1
+> output endpoint string = 'https://api.bing.microsoft.com/'
+> output bingName string = name //instead of "bing.name"
+> ```
+>
+> 3. In the ```infra/ai/hub.bicep```, locate the bingConnection resource and add the ```BING_SEARCH_API_KEY``` while commenting out the ```bing``` resource:
+> ```bicep
+>   ...
+>   ...
+>   //Locate the bingConnection resource and add the bing-search-api-key
+>   resource bingConnection 'connections' = {
+>     name: bingConnectionName
+>     properties: {
+>       category: 'ApiKey'
+>       authType: 'ApiKey'
+>       isSharedToAll: true
+>       target: 'https://api.bing.microsoft.com/'
+>       credentials: {
+>         key: '<bing-search-api-key-given-by-your-coach>' //instead of bing.listKeys().key1
+>       }
+>       metadata: {
+>         location: 'global'
+>       }
+>     }
+>   }
+> }
+>
+> ...
+> 
+> //resource bing 'Microsoft.Bing/accounts@2020-06-10' existing = {
+> //  name: bingName
+> //}
+> 
+> output name string = hub.name
+> output id string = hub.id
+> output principalId string = hub.identity.principalId
+>```
+> 4. You can re-run ```azd up``` command to deploy the application again.
 
-// Comment this resource
-// resource bing 'Microsoft.Bing/accounts@2020-06-10' = {
-//   name: name
-//   location: location
-//   kind: 'Bing.Grounding'
-//   tags: (contains(tags, 'Microsoft.Bing/accounts') ? tags['Microsoft.Bing/accounts'] : json('{}'))
-//   sku: {
-//     name: sku
-//   }
-// }
-
-#disable-next-line outputs-should-not-contain-secrets
-output bingApiKey string = '<bing-search-api-key-given-by-your-coach>' //instead of bing.listKeys().key1
-output endpoint string = 'https://api.bing.microsoft.com/'
-output bingName string = name //instead of "bing.name"
-```
-
-3. In the ```infra/ai/hub.bicep```, locate the bingConnection resource and add the ```BING_SEARCH_API_KEY``` while commenting out the ```bing``` resource:
-```bicep
-  ...
-  ...
-  //Locate the bingConnection resource and add the bing-search-api-key
-  resource bingConnection 'connections' = {
-    name: bingConnectionName
-    properties: {
-      category: 'ApiKey'
-      authType: 'ApiKey'
-      isSharedToAll: true
-      target: 'https://api.bing.microsoft.com/'
-      credentials: {
-        key: '<bing-search-api-key-given-by-your-coach>' //instead of bing.listKeys().key1
-      }
-      metadata: {
-        location: 'global'
-      }
-    }
-  }
-}
-
-...
-
-//resource bing 'Microsoft.Bing/accounts@2020-06-10' existing = {
-//  name: bingName
-//}
-
-output name string = hub.name
-output id string = hub.id
-output principalId string = hub.identity.principalId
-```
-4. You can re-run ```azd up``` command to deploy the application again.
+</div>
 
 </details>
 
@@ -400,38 +404,43 @@ output principalId string = hub.identity.principalId
 
 <summary> Toggle Solution ✅</summary>
 
-1. Go to ```infra/ai.yaml``` and set your available capacity for  the different models.
-2. Your yaml should look like this.
+<div class="tip" data-title="Solution">
 
-```yaml
-# yaml-language-server: $schema=ai.yaml.json
+> 1. Go to ```infra/ai.yaml``` and set your available capacity for  the different models.
+> 2. Your yaml should look like this.
+>
+>```yaml
+># yaml-language-server: $schema=ai.yaml.json
+>
+>deployments:
+>  - name: text-embedding-ada-002
+>    model:
+>      format: OpenAI
+>      name: text-embedding-ada-002
+>      version: "2"
+>    sku:
+>      name: "Standard"
+>      capacity: 8  # default template value: 20
+>  - name: gpt-4
+>    model:
+>      format: OpenAI
+>      name: gpt-4o
+>      version: "2024-05-13"
+>    sku:
+>      name: "GlobalStandard"
+>      capacity: 8 # default template value: 80
+>  - name: gpt-4-evals
+>    model:
+>      format: OpenAI
+>      name: gpt-4o-mini
+>      version: "2024-07-18"
+>    sku:
+>      name: "GlobalStandard"
+>      capacity: 8 # default template value: 80
+>```
 
-deployments:
-  - name: text-embedding-ada-002
-    model:
-      format: OpenAI
-      name: text-embedding-ada-002
-      version: "2"
-    sku:
-      name: "Standard"
-      capacity: 8  # default template value: 20
-  - name: gpt-4
-    model:
-      format: OpenAI
-      name: gpt-4o
-      version: "2024-05-13"
-    sku:
-      name: "GlobalStandard"
-      capacity: 8 # default template value: 80
-  - name: gpt-4-evals
-    model:
-      format: OpenAI
-      name: gpt-4o-mini
-      version: "2024-07-18"
-    sku:
-      name: "GlobalStandard"
-      capacity: 8 # default template value: 80
-```
+</div>
+
 </details>
 
 <div class="warning" data-title="Warning">
