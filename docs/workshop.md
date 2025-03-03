@@ -289,7 +289,7 @@ Once you've opened the project in **Codespaces**, **Dev Containers**, or **local
     <div class="tip" data-title="Tips">
 
     > - If the desired subscription is not displayed, use your keyboard's arrow to scroll through the list of subscriptions until you find it. 
-    > - If the desired subscription is still not displayed, you may have to specify the tenant for both commands. `azd auth login --tenant-id XXX  --use-device-code` and `az login --tenant XXXX  --use-device-code`
+    > - If the desired subscription is still not displayed, you may have to specify the tenant for both commands. `azd auth login --tenant-id XXX --use-device-code` and `az login --tenant XXXX  --use-device-code`
 
     </div>
 
@@ -299,8 +299,12 @@ Once you've opened the project in **Codespaces**, **Dev Containers**, or **local
     azd up
     ```
 
+    <div class="info" data-title="Info">
+
     > - You will be prompted to select some details about your deployed resources, including location. As a reminder we recommend ```East US 2``` as the region for this project but you can try with another one if you want.
     > - This project uses `gpt-4o` and ```gpt-4o-mini``` which may not be available in all Azure regions. Check for [up-to-date region availability](https://learn.microsoft.com/azure/ai-services/openai/concepts/models#standard-deployment-model-availability) and select a region during deployment accordingly.
+
+    </div>
 
     After running azd up, you may be asked the following question during `Github Setup`:
 
@@ -310,6 +314,15 @@ Once you've opened the project in **Codespaces**, **Dev Containers**, or **local
     ```
 
     You should respond with `N`, as this is not a necessary step, and takes some time to set up.
+
+    <div class="tip" data-title="Tips">
+
+    > If your `azd up` command fails during the post-provisioning step, you don't need to restart from the beginning, you can directly retry the post-provisioning step by running the following command:
+    > ```shell
+    > azd hooks run postprovision
+    > ```
+
+    </div>
 
     > Once the deployment is complete, you should be able to scroll up in your terminal and see the url that the app has been deployed to. It should look similar to this:
     ```Ingress Updated. Access your app at https://env-name.codespacesname.eastus2.azurecontainerapps.io/```<br><br>
