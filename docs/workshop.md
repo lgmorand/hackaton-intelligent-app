@@ -152,6 +152,17 @@ You have a few options for setting up this project.
 
     ![alt text](./assets/crwriter-deployment/change-remote-origin.png)
 
+    <div class="info" data-title="Note">
+
+    > If you have any issue with the commands above, you can completely delete and re-clone the repository with the following commands:
+    >```console
+    >cd ..
+    >rm -rf contoso-creative-writer
+    >git clone https://github.com/<your-github-username>/contoso-creative-writer.git
+    >cd contoso-creative-writer/
+
+    </div>
+
     <div class="tip">
 
     > **Congratulations 🎉**<br><br>
@@ -175,7 +186,7 @@ A related option is VS Code Dev Containers, which will open the project in your 
     > - If you do not have Docker Desktop installed/working, you can use [Windows Subsystem for Linux (WSL)](https://learn.microsoft.com/en-us/windows/wsl/install) as an alternative.
     > - Once installed, clone the forked github repository and run the following:
     >```console
-    >git clone https://github.com/yourusername/contoso-creative-writer.git
+    >git clone https://github.com/<your-username>/contoso-creative-writer.git
     >cd contoso-creative-writer
     >code . &
     >```
@@ -183,9 +194,27 @@ A related option is VS Code Dev Containers, which will open the project in your 
     > ![dev-container](./assets/crwriter-deployment/devcontainer-vscvode.png)
     </div>
 
-3. In the VS Code window that opens, once the project files show up (this may take several minutes), open a terminal window.
+3. Change your remote origin from ```fethidilmi/contoso-creative-writer``` to your forked repo:
 
-4. Install required packages:
+    ```console
+    git remote set-url origin https://github.com/<your-github-username>/contoso-creative-writer.git
+    git pull
+    ```
+
+    <div class="info" data-title="Note">
+
+    > If you have any issue with the commands above, you can completely delete and re-clone the repository with the following commands:
+    >```console
+    >cd ..
+    >rm -rf contoso-creative-writer
+    >git clone https://github.com/<your-github-username>/contoso-creative-writer.git
+    >cd contoso-creative-writer/
+
+    </div>
+
+4. In the VS Code window that opens, once the project files show up (this may take several minutes), open a terminal window.
+
+5. Install required packages:
 
     ```shell
     cd src/api
@@ -211,7 +240,7 @@ A related option is VS Code Dev Containers, which will open the project in your 
 
     > **Note for Windows users:**
     > - If you are not using a container to run this sample, we recommend using the hooks that run shell scripts, and for that you would need a Linux container. To provision this sample correctly while we work on updates we recommend using [git bash](https://gitforwindows.org/).<br>
-    > - Another option **(which we recommend)**, is to use [Azure Cloud Shell](https://learn.microsoft.com/en-us/azure/cloud-shell/new-ui-shell-window) with Bash for all these operations.
+    > - Another option would be to use [Azure Cloud Shell](https://learn.microsoft.com/en-us/azure/cloud-shell/new-ui-shell-window) with Bash for all these operations. In this operation you might need to install a newer version of Python (with homebrew).
 
 2. Clone your forked repository:
 
