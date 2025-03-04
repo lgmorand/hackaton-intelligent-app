@@ -233,10 +233,12 @@ A related option is VS Code Dev Containers, which will open the project in your 
 
 1. Setup local pre-requisites
 
+    * [Azure CLI (az)](https://docs.microsoft.com/cli/azure/install-azure-cli)
     * [Azure Developer CLI (azd)](https://aka.ms/install-azd)
     * [Python 3.10+](https://www.python.org/downloads/)
     * [Docker Desktop](https://www.docker.com/products/docker-desktop/)
     * [Git](https://git-scm.com/downloads)
+    * [Node Package Manager (npm)](https://nodejs.org/en/download/)
 
     > **Note for Windows users:**
     > - If you are not using a container to run this sample, we recommend using the hooks that run shell scripts, and for that you would need a Linux container. To provision this sample correctly while we work on updates we recommend using [git bash](https://gitforwindows.org/).<br>
