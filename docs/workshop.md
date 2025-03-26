@@ -132,9 +132,9 @@ You have a few options for setting up this project.
 
 2. Fork the this [repository](https://github.com/fethidilmi/contoso-creative-writer/fork).
 
-3. Open GitHub Codespaces on the official repository ```Azure-Samples/contoso-creative-writer```:
+3. Open GitHub Codespaces on the official repository ```fethidilmi/contoso-creative-writer```:
 
-   [![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg) ](https://codespaces.new/Azure-Samples/contoso-creative-writer)
+   [![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg) ](https://codespaces.new/fethidilmi/contoso-creative-writer)
 
     <div class="warning" data-title="Warning">
 
