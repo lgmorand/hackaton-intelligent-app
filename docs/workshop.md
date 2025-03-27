@@ -244,14 +244,16 @@ A related option is VS Code Dev Containers, which will open the project in your 
     > - If you are not using a container to run this sample, we recommend using the hooks that run shell scripts, and for that you would need a Linux container. To provision this sample correctly while we work on updates we recommend using [git bash](https://gitforwindows.org/).<br>
     > - Another option would be to use [Azure Cloud Shell](https://learn.microsoft.com/en-us/azure/cloud-shell/new-ui-shell-window) with Bash for all these operations. In this operation you might need to install a newer version of Python (with homebrew).
 
-2. Clone your forked repository:
+2. Fork the this [repository](https://github.com/fethidilmi/contoso-creative-writer/fork).
+
+3. Clone your forked repository:
 
     ```shell
     git clone https://github.com/yourusername/contoso-creative-writer.git
     cd contoso-creative-writer/
     ```
 
-3. Install required packages:
+4. Install required packages:
 
     ```shell
     cd src/api
