@@ -895,6 +895,8 @@ switch to using code instead of pressing play on the file.
 <details>
 <summary>📚 Run the code:</summary>
 
+> Run the ```ipython``` interpreter to execute the following code:
+
 ```python
 import prompty
 import prompty.azure
@@ -1045,6 +1047,7 @@ To put everything together the ```research()``` function in ```docs/workshop/res
 
 > - Try different instructions and see which results you get and which function is called.
 > - Exectute the following python code from within ```docs/workshop/researcher``` folder.
+> - Run the ```ipython``` interpreter to execute the following code:
 > ```python
 >from pprint import pprint
 >from researcher3 import execute_researcher_prompty, execute_function_calls
@@ -1111,7 +1114,7 @@ The social media agent is a great way to generate twitter threads that are **4 t
 <div class="task" data-title="Instructions">
 
 > Move to the ```/docs/workshop/socialmedia``` folder and run the code below in the terminal.
-> 
+> Run the ```ipython``` interpreter to execute the following code:
 >```python
 >from social import run_social_media_agent
 >
